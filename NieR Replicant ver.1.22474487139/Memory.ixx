@@ -43,7 +43,8 @@ private:
 		return false;
 	}
 
-	bool openProcess() {
+	bool openProcess()
+	{
 		handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, static_cast<DWORD>(processID));
 
 		if (handle)
@@ -70,7 +71,7 @@ public:
 		std::array<T, N> buffer;
 		SIZE_T bytesRead;
 
-		if (ReadProcessMemory(handle, reinterpret_cast<LPVOID>(address), buffer.data(), N, &bytesRead))
+		if (ReadProcessMemory(handle, reinterpret_cast<LPVOID>(address), buffer.data(), N, &bytesRead) && bytesRead)
 			return buffer;
 
 		return std::nullopt;

@@ -9,7 +9,8 @@ export class Nier
 private:
 	Memory memory;
 
-	void fishingSkipWaitTime() {
+	void fishingSkipWaitTime()
+	{
 		/*
 		***REMOVED***
 
