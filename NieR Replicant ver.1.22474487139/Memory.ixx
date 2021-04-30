@@ -65,6 +65,37 @@ public:
 			exit(-1);
 	}
 
+	std::optional<std::pair<uintptr_t, size_t>> getModule(std::wstring moduleName)
+	{
+		MODULEENTRY32W moduleEntry;
+		moduleEntry.dwSize = sizeof(moduleEntry);
+
+		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processID);
+
+		if (snapshot == INVALID_HANDLE_VALUE)
+			return std::nullopt;
+
+		if (Module32FirstW(snapshot, &moduleEntry))
+		{
+			do
+			{
+				std::wstring moduleNameCmp = moduleEntry.szModule;
+				if (moduleNameCmp.find(moduleName) != std::wstring::npos)
+				{
+					if (moduleEntry.modBaseAddr && moduleEntry.modBaseSize)
+					{
+						CloseHandle(snapshot);
+						return std::make_pair(reinterpret_cast<uintptr_t>(moduleEntry.modBaseAddr), static_cast<size_t>(moduleEntry.modBaseSize));
+					}
+					break;
+				}
+			} while (Module32NextW(snapshot, &moduleEntry));
+		}
+
+		CloseHandle(snapshot);
+		return std::nullopt;
+	}
+
 	template<typename T, size_t N>
 	std::optional<std::array<T, N>> readMemory(uintptr_t address)
 	{
