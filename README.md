@@ -1,1 +1,28 @@
 # NieR Replicant ver.1.22474487139
+
+This project serves the purpose of having some additional fun with this awesome game.
+
+## Patches
+
+### Fishing
+
+I'm quite obsessed with fishing in games as seen in [CancerCraft](https://github.com/Acurisu/CancerCraft) so I had to look into it.
+
+I really enjoy the fishing in this game but still wrote some patches to make it easier and faster for lazy people.
+
+The fishing states one can have are the following:
+
+0. throwing bobber
+1. bobber in water
+2. fish bite
+3. battle
+4. pull out
+5. success
+6. fail
+7. finishing success
+8. clicked fish record away
+9. popups gone
+
+`fishingSkipWaitTime` prevents the player from going into stage 1 and directly skips to stage 3, thus instantly starting the battle as soon as the bobber is supposed to hit the water.
+
+`fishingSkipBattle` immediately finishes the battle. Using only this patch would lead to a more NieR:Automata like fishing.
