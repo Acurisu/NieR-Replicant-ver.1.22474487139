@@ -38,7 +38,7 @@ private:
 		memory.writeMemory(0x1403A5731, patch);
 	}
 
-	void maxMoney()
+	void moneyInfinite()
 	{
 		/*
 		***REMOVED***
@@ -52,7 +52,7 @@ private:
 		memory.writeMemory(player + 0xBC, money);
 	}
 
-	void maxXP()
+	void xpMax()
 	{
 		/*
 		.data2:0000000145CF8795                 add     [rcx+rax*4+70h], r8d
@@ -63,7 +63,7 @@ private:
 		memory.writeMemory(player + 0x70, xp);
 	}
 
-	void maxHealth()
+	void healthInfinite()
 	{
 		/*
 		***REMOVED***
@@ -78,7 +78,7 @@ private:
 	}
 
 
-	void maxMagic()
+	void magicInfinite()
 	{
 		/*
 		***REMOVED***
@@ -92,19 +92,28 @@ private:
 		memory.writeMemory(player + 0x58, magic);
 	}
 
+	std::string getName()
+	{
+		if (auto name = memory.readMemory<char, 10>(player + 0x2C))
+			return std::string(name->data(), 10);
+
+		return "";
+	}
+
 public:
 	Nier() : memory(L"NieR Replicant ver.1.22474487139.exe")
 	{
+		std::cout << "Welcome " << getName() << "\n";
 		std::cout << "Patching..." << "\n";
 
 		fishingSkipWaitTime();
 		fishingSkipBattle();
 
-		maxMoney();
-		maxXP();
+		moneyInfinite();
+		xpMax();
 
-		maxHealth();
-		maxMagic();
+		healthInfinite();
+		magicInfinite();
 
 		std::cout << "Done." << std::endl;
 	}
