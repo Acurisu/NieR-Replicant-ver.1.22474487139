@@ -379,29 +379,29 @@ struct Documents
 
 struct Maps
 {
-  bool world_map;
+  char world_map;
   char unk[2];
-  bool central_village_map;
-  bool lost_shrine_area_map;
-  bool lost_shrine_map;
-  bool the_aerie_map;
-  bool seafront_map;
-  bool desert_map;
-  bool facade_map;
-  bool barren_temple_map;
-  bool junk_heap_area_map;
-  bool junk_heap_map;
-  bool manor_map;
-  bool forest_of_myth_map;
-  bool underground_facility_map;
+  char central_village_map;
+  char lost_shrine_area_map;
+  char lost_shrine_map;
+  char the_aerie_map;
+  char seafront_map;
+  char desert_map;
+  char facade_map;
+  char barren_temple_map;
+  char junk_heap_area_map;
+  char junk_heap_map;
+  char manor_map;
+  char forest_of_myth_map;
+  char underground_facility_map;
   char unk1;
-  bool shadowlords_castle_map;
+  char shadowlords_castle_map;
   char unk2;
-  bool northern_plains_map;
-  bool southern_plains_map;
-  bool eastern_road_map;
-  bool beneath_the_forest_of_myth_map;
-  bool toyko_map;
+  char northern_plains_map;
+  char southern_plains_map;
+  char eastern_road_map;
+  char beneath_the_forest_of_myth_map;
+  char toyko_map;
 };
 
 enum Weapon_Level : char
