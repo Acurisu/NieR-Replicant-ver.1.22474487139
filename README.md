@@ -37,13 +37,17 @@ The fishing states one can have are the following:
 9. popups gone
 ```
 
-`fishingSkipWaitTime` prevents the player from going into stage 1 and directly skips to stage 3, thus instantly starting the battle as soon as the bobber is supposed to hit the water.
+`fishing_skip_wait_time` prevents the player from going into stage 1 and directly skips to stage 3, thus instantly starting the battle as soon as the bobber is supposed to hit the water.
 
-`fishingSkipBattle` immediately finishes the battle. Using only this patch would lead to a more NieR:Automata like fishing.
+`fishing_skip_battle` immediately finishes the battle. Using only this patch would lead to a more NieR:Automata like fishing.
 
 ### Money, XP, Health and Magic
 
 These patches max out the mentioned properties and, if necessary, prevent them from being changed.
+
+### Items, Weapons and Words
+
+Unlocks all items, weapons and words. Be careful when doing this as it can prevent you from doing certain quests.
 
 ## Video
 
