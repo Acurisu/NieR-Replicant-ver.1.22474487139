@@ -9,43 +9,43 @@ import std.core;
 export class Memory
 {
 private:
-	uintptr_t processID;
-	std::wstring processName;
+	uintptr_t process_id;
+	std::wstring process_name;
 
-	bool getProcessID()
+	bool get_process_id()
 	{
-		PROCESSENTRY32W processEntry;
-		processEntry.dwSize = sizeof(processEntry);
+		PROCESSENTRY32W process_entry;
+		process_entry.dwSize = sizeof(process_entry);
 
 		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
 
 		if (snapshot == INVALID_HANDLE_VALUE)
 			return false;
 
-		if (Process32FirstW(snapshot, &processEntry))
+		if (Process32FirstW(snapshot, &process_entry))
 		{
 			do
 			{
-				std::wstring processNameCmp = processEntry.szExeFile;
-				if (processNameCmp.find(processName) != std::wstring::npos)
+				std::wstring process_name_cmp = process_entry.szExeFile;
+				if (process_name_cmp.find(process_name) != std::wstring::npos)
 				{
-					processID = processEntry.th32ProcessID;
+					process_id = process_entry.th32ProcessID;
 					break;
 				}
-			} while (Process32NextW(snapshot, &processEntry));
+			} while (Process32NextW(snapshot, &process_entry));
 		}
 
 		CloseHandle(snapshot);
 
-		if (processID)
+		if (process_id)
 			return true;
 
 		return false;
 	}
 
-	bool openProcess()
+	bool open_process()
 	{
-		handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, static_cast<DWORD>(processID));
+		handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, static_cast<DWORD>(process_id));
 
 		if (handle)
 			return true;
@@ -56,40 +56,40 @@ private:
 public:
 	HANDLE handle;
 
-	Memory(std::wstring processName) : processName(processName)
+	Memory(std::wstring process_name) : process_name(process_name)
 	{
-		if (!getProcessID())
+		if (!get_process_id())
 			exit(-1);
 
-		if (!openProcess())
+		if (!open_process())
 			exit(-1);
 	}
 
-	std::optional<std::pair<uintptr_t, size_t>> getModule(std::wstring moduleName)
+	std::optional<std::pair<uintptr_t, size_t>> get_module(std::wstring module_name)
 	{
-		MODULEENTRY32W moduleEntry;
-		moduleEntry.dwSize = sizeof(moduleEntry);
+		MODULEENTRY32W module_entry;
+		module_entry.dwSize = sizeof(module_entry);
 
-		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processID);
+		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, process_id);
 
 		if (snapshot == INVALID_HANDLE_VALUE)
 			return std::nullopt;
 
-		if (Module32FirstW(snapshot, &moduleEntry))
+		if (Module32FirstW(snapshot, &module_entry))
 		{
 			do
 			{
-				std::wstring moduleNameCmp = moduleEntry.szModule;
-				if (moduleNameCmp.find(moduleName) != std::wstring::npos)
+				std::wstring module_name_cmp = module_entry.szModule;
+				if (module_name_cmp.find(module_name) != std::wstring::npos)
 				{
-					if (moduleEntry.modBaseAddr && moduleEntry.modBaseSize)
+					if (module_entry.modBaseAddr && module_entry.modBaseSize)
 					{
 						CloseHandle(snapshot);
-						return std::make_pair(reinterpret_cast<uintptr_t>(moduleEntry.modBaseAddr), static_cast<size_t>(moduleEntry.modBaseSize));
+						return std::make_pair(reinterpret_cast<uintptr_t>(module_entry.modBaseAddr), static_cast<size_t>(module_entry.modBaseSize));
 					}
 					break;
 				}
-			} while (Module32NextW(snapshot, &moduleEntry));
+			} while (Module32NextW(snapshot, &module_entry));
 		}
 
 		CloseHandle(snapshot);
@@ -97,22 +97,22 @@ public:
 	}
 
 	template<typename T, size_t N>
-	std::optional<std::array<T, N>> readMemory(uintptr_t address)
+	std::optional<std::array<T, N>> read_memory(uintptr_t address)
 	{
 		std::array<T, N> buffer;
-		SIZE_T bytesRead;
+		SIZE_T bytes_read;
 
-		if (ReadProcessMemory(handle, reinterpret_cast<LPVOID>(address), buffer.data(), N, &bytesRead) && bytesRead)
+		if (ReadProcessMemory(handle, reinterpret_cast<LPVOID>(address), buffer.data(), N, &bytes_read) && bytes_read)
 			return buffer;
 
 		return std::nullopt;
 	}
 
 	template<typename T, size_t N>
-	bool writeMemory(uintptr_t address, std::array<T, N> buffer)
+	bool write_memory(uintptr_t address, std::array<T, N> buffer)
 	{
-		SIZE_T bytesWritten;
-		if (WriteProcessMemory(handle, reinterpret_cast<LPVOID>(address), buffer.data(), N, &bytesWritten) && bytesWritten)
+		SIZE_T bytes_written;
+		if (WriteProcessMemory(handle, reinterpret_cast<LPVOID>(address), buffer.data(), N, &bytes_written) && bytes_written)
 			return true;
 
 		return false;
