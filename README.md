@@ -4,15 +4,15 @@ This project serves the purpose of having some additional fun with this awesome 
 
 I also use it to try-out/play with [C++20 Modules](https://en.cppreference.com/w/cpp/language/modules).
 
-
-
 ## Usage
 
 1. Start the game
 2. Load a save file
 3. Start the .exe
 
+## Information
 
+Additional information can be found [here](Information).
 
 ## Patches
 
@@ -41,26 +41,18 @@ The fishing states one can have are the following:
 
 `fishingSkipBattle` immediately finishes the battle. Using only this patch would lead to a more NieR:Automata like fishing.
 
-
-
 ### Money, XP, Health and Magic
 
 These patches max out the mentioned properties and, if necessary, prevent them from being changed.
-
-
 
 ## Video
 
 _Coming soon™_
 
-
-
 ## Release
 
 _Coming soon™_
 
-
-
-## Thanks
+## Cui honorem, honorem
 
 Huge thanks to [ioncodes](https://github.com/ioncodes) for wasting his time on this with me.
