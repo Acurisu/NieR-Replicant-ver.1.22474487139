@@ -41,6 +41,17 @@ private:
 		memory.write_memory(0x1403A5731, patch);
 	}
 
+	void prevent_model_update()
+	{
+		/*
+		***REMOVED***
+
+		player->player_model = player_model;
+		*/
+		std::array<char, 6> patch = { '\x90', '\x90', '\x90', '\x90', '\x90', '\x90' };
+		memory.write_memory(0x1403B0BE0, patch);
+	}
+
 	void money_infinite()
 	{
 		/*
@@ -82,6 +93,8 @@ public:
 			Player* player = reinterpret_cast<Player*>(p->data());
 
 			std::cout << "Welcome " << player->name << std::endl;
+
+			player->player_model = Nier_Prologue;
 
 			player->money = std::numeric_limits<int>::max();
 			player->xp = std::numeric_limits<int>::max();
@@ -131,6 +144,7 @@ public:
 
 			fishing_skip_wait_time();
 			fishing_skip_battle();
+			prevent_model_update();
 			money_infinite();
 			health_infinite();
 			magic_infinite();
