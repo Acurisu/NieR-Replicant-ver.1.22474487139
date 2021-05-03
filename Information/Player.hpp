@@ -410,6 +410,7 @@ enum Weapon_Level : char
   Level_2 = 0x1,
   Level_3 = 0x2,
   Level_4 = 0x3,
+  Not_Owned = 0xFF,
 };
 
 struct Weapons
