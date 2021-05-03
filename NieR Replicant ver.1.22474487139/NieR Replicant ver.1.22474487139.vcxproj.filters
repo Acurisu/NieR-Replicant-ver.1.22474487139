@@ -24,5 +24,8 @@
     <ClCompile Include="Nier.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Player.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
