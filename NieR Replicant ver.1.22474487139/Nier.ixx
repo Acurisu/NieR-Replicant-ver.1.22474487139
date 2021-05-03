@@ -96,7 +96,7 @@ public:
 		}
 		else
 		{
-			std::cout << "Could not get player" << std::endl;
+			std::cerr << "Could not get player" << std::endl;
 			exit(-1);
 		}
 	}
