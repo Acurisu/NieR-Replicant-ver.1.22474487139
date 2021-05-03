@@ -501,5 +501,4 @@ export struct Player
 	Maps maps;
 	char unk12[276];
 	Weapons weapons;
-	char unk13[1849];
 };
