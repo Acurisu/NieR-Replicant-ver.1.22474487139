@@ -261,7 +261,7 @@ struct Raw_Materials
   char unk6;
   char mouse_tail;
   char lizard_tail;
-  char field_78[3];
+  char unk7[3];
   char deer_antler;
 };
 
@@ -457,6 +457,135 @@ struct Weapons
   Weapon_Level virtuous_dignity;
 };
 
+enum Words_Uloth : long long
+{
+  Pah = 0x1,
+  Paha = 0x2,
+  Pahi = 0x4,
+  Paho = 0x8,
+  Pahu = 0x10,
+  Pahal = 0x20,
+  Pahil = 0x40,
+  Pahol = 0x80,
+  Pahul = 0x100,
+  Pahuloth = 0x200,
+  Var = 0x400,
+  Vara = 0x800,
+  Vari = 0x1000,
+  Varo = 0x2000,
+  Varu = 0x4000,
+  Varal = 0x8000,
+  Varil = 0x10000,
+  Varol = 0x20000,
+  Varul = 0x40000,
+  Varuloth = 0x80000,
+  Geb = 0x100000,
+  Geba = 0x200000,
+  Gebi = 0x400000,
+  Gebo = 0x800000,
+  Gebu = 0x1000000,
+  Gebal = 0x2000000,
+  Gebil = 0x4000000,
+  Gebol = 0x8000000,
+  Gebul = 0x10000000,
+  Gebuloth = 0x20000000,
+  Ul = 0x40000000,
+  Ula = 0x80000000,
+  Uli = 0x100000000,
+  Ulo = 0x200000000,
+  Ulu = 0x400000000,
+  Ulal = 0x800000000,
+  Ulil = 0x1000000000,
+  Ulol = 0x2000000000,
+  Ulul = 0x4000000000,
+  Ululoth = 0x8000000000,
+  Hod = 0x10000000000,
+  Hoda = 0x20000000000,
+  Hodi = 0x40000000000,
+  Hodo = 0x80000000000,
+  Hodu = 0x100000000000,
+  Hodal = 0x200000000000,
+  Hodil = 0x400000000000,
+  Hodol = 0x800000000000,
+  Hodul = 0x1000000000000,
+  Hoduloth = 0x2000000000000,
+  Bes = 0x4000000000000,
+  Besa = 0x8000000000000,
+  Besi = 0x10000000000000,
+  Beso = 0x20000000000000,
+  Besu = 0x40000000000000,
+  Besal = 0x80000000000000,
+  Besil = 0x100000000000000,
+  Besol = 0x200000000000000,
+  Besul = 0x400000000000000,
+  Besuloth = 0x800000000000000,
+};
+
+enum Words_Zarken : long long
+{
+  Lug = 0x1,
+  Lugir = 0x2,
+  Luges = 0x4,
+  Lugka = 0x8,
+  Lugza = 0x10,
+  Lugira = 0x20,
+  Lugesra = 0x40,
+  Lugkarr = 0x80,
+  Lugzarr = 0x100,
+  Lugzarken = 0x200,
+  Ot = 0x400,
+  Otir = 0x800,
+  Otes = 0x1000,
+  Otka = 0x2000,
+  Otza = 0x4000,
+  Otira = 0x8000,
+  Otesra = 0x10000,
+  Otkarr = 0x20000,
+  Otzarr = 0x40000,
+  Otzarken = 0x80000,
+  Mah = 0x100000,
+  Mahir = 0x200000,
+  Mahes = 0x400000,
+  Mahka = 0x800000,
+  Mahza = 0x1000000,
+  Mahira = 0x2000000,
+  Mahesra = 0x4000000,
+  Mahkarr = 0x8000000,
+  Mahzarr = 0x10000000,
+  Mahzarken = 0x20000000,
+  Ashur = 0x40000000,
+  Ashurir = 0x80000000,
+  Ashures = 0x100000000,
+  Ashurka = 0x200000000,
+  Ashurza = 0x400000000,
+  Ashurira = 0x800000000,
+  Ashuresra = 0x1000000000,
+  Ashurkarr = 0x2000000000,
+  Ashurzarr = 0x4000000000,
+  Ashurzarken = 0x8000000000,
+  Kon = 0x10000000000,
+  Konir = 0x20000000000,
+  Kones = 0x40000000000,
+  Konka = 0x80000000000,
+  Konza = 0x100000000000,
+  Konira = 0x200000000000,
+  Konesra = 0x400000000000,
+  Konkarr = 0x800000000000,
+  Konzarr = 0x1000000000000,
+  Konzarken = 0x2000000000000,
+  Sol = 0x4000000000000,
+  Solir = 0x8000000000000,
+  Soles = 0x10000000000000,
+  Solka = 0x20000000000000,
+  Solza = 0x40000000000000,
+  Solira = 0x80000000000000,
+  Solesra = 0x100000000000000,
+  Solkarr = 0x200000000000000,
+  Solzarr = 0x400000000000000,
+  Solzarken = 0x800000000000000,
+  Ashurfarra = 0x1000000000000000,
+};
+
 struct Player
 {
   int unk;
@@ -500,4 +629,7 @@ struct Player
   Maps maps;
   char unk12[276];
   Weapons weapons;
+  char unk13[601];
+  Words_Uloth words_uloth;
+  Words_Zarken words_zarken;
 };
