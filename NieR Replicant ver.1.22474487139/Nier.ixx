@@ -1,3 +1,5 @@
+#include <cstddef>
+
 export module Nier;
 
 import std.core;
@@ -85,6 +87,45 @@ public:
 			player->xp = std::numeric_limits<int>::max();
 			player->health = 691337;
 			player->magic = 420.f;
+
+			for (size_t i = offsetof(Player, recovery); i < offsetof(Player, unk7); ++i) {
+				p->at(i) = 10;
+			}
+
+			for (size_t i = offsetof(Player, cultivation); i < constexpr(offsetof(Player, cultivation) + offsetof(Cultivation, red_moonflower)); ++i) {
+				p->at(i) = 99;
+			}
+
+			for (size_t i = constexpr(offsetof(Player, cultivation) + offsetof(Cultivation, red_moonflower)); i < offsetof(Player, unk8); ++i) {
+				p->at(i) = 10;
+			}
+
+			for (size_t i = offsetof(Player, fishing); i < offsetof(Player, unk9); ++i) {
+				p->at(i) = 99;
+			}
+
+			for (size_t i = offsetof(Player, raw_materials); i < offsetof(Player, key_items); ++i) {
+				p->at(i) = 99;
+			}
+
+			for (size_t i = offsetof(Player, key_items); i < offsetof(Player, unk10); ++i) {
+				p->at(i) = 1;
+			}
+
+			for (size_t i = offsetof(Player, documents); i < offsetof(Player, unk11); ++i) {
+				p->at(i) = true;
+			}
+
+			for (size_t i = offsetof(Player, maps); i < offsetof(Player, unk12); ++i) {
+				p->at(i) = 1;
+			}
+
+			for (size_t i = offsetof(Player, weapons); i < offsetof(Player, unk13); ++i) {
+				p->at(i) = Level_4;
+			}
+
+			player->words_uloth = static_cast<Words_Uloth>(0xFFFFFFFFFFFFFFFLL);
+			player->words_zarken = static_cast<Words_Zarken>(0x1FFFFFFFFFFFFFFFLL);
 
 			memory.write_memory(player_address, *p);
 
