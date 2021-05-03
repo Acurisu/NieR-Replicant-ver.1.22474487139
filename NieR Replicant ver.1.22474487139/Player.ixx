@@ -1,5 +1,14 @@
 export module Player;
 
+export enum Player_Model : int
+{
+	Nier_Young = 0x0,
+	Nier_Prologue = 0x1,
+	Nier_Old = 0x2,
+	Nier_Gestalt = 0x3,
+	Kaine = 0x4,
+};
+
 enum Order : int
 {
 	Attack_All = 0x0,
@@ -592,7 +601,8 @@ export struct Player
 {
 	int unk;
 	char map[24];
-	char unk1[16];
+	char unk1[12];
+	Player_Model player_model;
 	char name[10];
 	char unk2[22];
 	int health;
