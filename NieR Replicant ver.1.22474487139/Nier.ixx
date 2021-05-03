@@ -3,14 +3,15 @@ export module Nier;
 import std.core;
 
 import Memory;
+import Player;
 
 export class Nier
 {
 private:
 	Memory memory;
-	uintptr_t player = 0x144372790;
+	uintptr_t player_address = 0x144372790;
 
-	void fishingSkipWaitTime()
+	void fishing_skip_wait_time()
 	{
 		/*
 		***REMOVED***
@@ -18,10 +19,10 @@ private:
 		player->fishingState = 1;
 		*/
 		std::array<char, 1> patch = { '\x03' };
-		memory.writeMemory(0x1403A645C, patch);
+		memory.write_memory(0x1403A645C, patch);
 	}
 
-	void fishingSkipBattle()
+	void fishing_skip_battle()
 	{
 		/*
 		***REMOVED***
@@ -35,10 +36,10 @@ private:
 		}
 		*/
 		std::array<char, 2> patch = { '\x90', '\x90' };
-		memory.writeMemory(0x1403A5731, patch);
+		memory.write_memory(0x1403A5731, patch);
 	}
 
-	void moneyInfinite()
+	void money_infinite()
 	{
 		/*
 		***REMOVED***
@@ -46,24 +47,10 @@ private:
 		player->money = money;
 		*/
 		std::array<char, 5> patch = { '\x90', '\x90', '\x90', '\x90', '\x90' };
-		memory.writeMemory(0x1403BB34F, patch);
-
-		std::array<char, 4> money = { '\xFF', '\xFF', '\xFF', '\x7F' };
-		memory.writeMemory(player + 0xBC, money);
+		memory.write_memory(0x1403BB34F, patch);
 	}
 
-	void xpMax()
-	{
-		/*
-		.data2:0000000145CF8795                 add     [rcx+rax*4+70h], r8d
-
-		player->xp += xp;
-		*/
-		std::array<char, 4> xp = { '\xFF', '\xFF', '\xFF', '\x7F' };
-		memory.writeMemory(player + 0x70, xp);
-	}
-
-	void healthInfinite()
+	void health_infinite()
 	{
 		/*
 		***REMOVED***
@@ -71,14 +58,10 @@ private:
 		player->hp = hp;
 		*/
 		std::array<char, 5> patch = { '\x90', '\x90', '\x90', '\x90', '\x90' };
-		memory.writeMemory(0x145D106DD, patch);
-
-		std::array<char, 4> health = { '\x89', '\x8C', '\x0A', '\x00' };
-		memory.writeMemory(player + 0x4C, health);
+		memory.write_memory(0x145D106DD, patch);
 	}
 
-
-	void magicInfinite()
+	void magic_infinite()
 	{
 		/*
 		***REMOVED***
@@ -86,35 +69,35 @@ private:
 		player->magic = magic;
 		*/
 		std::array<char, 6> patch = { '\x90', '\x90', '\x90', '\x90', '\x90', '\x90' };
-		memory.writeMemory(0x1403BDB5E, patch);
-
-		std::array<char, 4> magic = { '\x00', '\x00', '\xD2', '\x43' };
-		memory.writeMemory(player + 0x58, magic);
-	}
-
-	std::string getName()
-	{
-		if (auto name = memory.readMemory<char, 10>(player + 0x2C))
-			return std::string(name->data(), 10);
-
-		return "";
+		memory.write_memory(0x1403BDB5E, patch);
 	}
 
 public:
 	Nier() : memory(L"NieR Replicant ver.1.22474487139.exe")
 	{
-		std::cout << "Welcome " << getName() << "\n";
-		std::cout << "Patching..." << "\n";
+		if (auto p = memory.read_memory<char, sizeof(Player)>(player_address))
+		{
+			Player* player = reinterpret_cast<Player*>(p->data());
 
-		fishingSkipWaitTime();
-		fishingSkipBattle();
+			std::cout << "Welcome " << player->name << std::endl;
 
-		moneyInfinite();
-		xpMax();
+			player->money = std::numeric_limits<int>::max();
+			player->xp = std::numeric_limits<int>::max();
+			player->health = 691337;
+			player->magic = 420.f;
 
-		healthInfinite();
-		magicInfinite();
+			memory.write_memory(player_address, *p);
 
-		std::cout << "Done." << std::endl;
+			fishing_skip_wait_time();
+			fishing_skip_battle();
+			money_infinite();
+			health_infinite();
+			magic_infinite();
+		}
+		else
+		{
+			std::cout << "Could not get player" << std::endl;
+			exit(-1);
+		}
 	}
 };
