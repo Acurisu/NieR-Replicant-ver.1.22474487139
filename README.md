@@ -14,6 +14,8 @@ I also use it to try-out/play with [C++20 Modules](https://en.cppreference.com/w
 
 Additional information can be found [here](Information).
 
+For something more interesting check out [this](https://twitter.com/layle_ctf/status/1388508172084776961) twitter thread.
+
 ## Patches
 
 ### Fishing
@@ -40,6 +42,10 @@ The fishing states one can have are the following:
 `fishing_skip_wait_time` prevents the player from going into stage 1 and directly skips to stage 3, thus instantly starting the battle as soon as the bobber is supposed to hit the water.
 
 `fishing_skip_battle` immediately finishes the battle. Using only this patch would lead to a more NieR:Automata like fishing.
+
+### Player model
+
+Sets the player model to prologue Nier and prevents it from being changed by the game.
 
 ### Money, XP, Health and Magic
 
