@@ -51,7 +51,7 @@ Unlocks all items, weapons and words. Be careful when doing this as it can preve
 
 ## Video
 
-_Coming soon™_
+https://user-images.githubusercontent.com/17300231/116914714-5e53b180-ac4b-11eb-8900-1fc75ada9c03.mp4
 
 ## Release
 
