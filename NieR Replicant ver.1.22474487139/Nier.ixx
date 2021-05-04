@@ -85,6 +85,19 @@ private:
 		memory.write_memory(0x1403BDB5E, patch);
 	}
 
+	void prevent_combo_break()
+	{
+		/*
+		***REMOVED***
+		[...]
+		***REMOVED***
+
+		player->combo = 0;
+		*/
+		std::array<char, 6> patch = { '\x90', '\x90', '\x90', '\x90', '\x90', '\x90' };
+		memory.write_memory(0x1406C1948, patch);
+	}
+
 public:
 	Nier() : memory(L"NieR Replicant ver.1.22474487139.exe")
 	{
@@ -148,6 +161,7 @@ public:
 			money_infinite();
 			health_infinite();
 			magic_infinite();
+			prevent_combo_break();
 		}
 		else
 		{
