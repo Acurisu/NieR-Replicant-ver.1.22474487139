@@ -41,7 +41,7 @@ private:
 		memory.write_memory(0x1403A5731, patch);
 	}
 
-	void prevent_model_update()
+	void prevent_character_update()
 	{
 		/*
 		***REMOVED***
@@ -107,7 +107,7 @@ public:
 
 			std::cout << "Welcome " << player->name << std::endl;
 
-			player->player_model = Nier_Prologue;
+			player->character = Nier_Prologue;
 
 			player->money = std::numeric_limits<int>::max();
 			player->xp = std::numeric_limits<int>::max();
@@ -157,7 +157,7 @@ public:
 
 			fishing_skip_wait_time();
 			fishing_skip_battle();
-			prevent_model_update();
+			prevent_character_update();
 			money_infinite();
 			health_infinite();
 			magic_infinite();

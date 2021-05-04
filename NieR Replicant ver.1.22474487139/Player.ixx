@@ -1,6 +1,6 @@
 export module Player;
 
-export enum Player_Model : int
+export enum Character : int
 {
 	Nier_Young = 0x0,
 	Nier_Prologue = 0x1,
@@ -602,7 +602,7 @@ export struct Player
 	int unk;
 	char map[24];
 	char unk1[12];
-	Player_Model player_model;
+	Character character;
 	char name[10];
 	char unk2[22];
 	int health;

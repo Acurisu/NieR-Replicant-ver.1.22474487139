@@ -11,10 +11,10 @@ Each being `0x9260` bytes wide. The player struct can be found at an offset of `
 
 ### Notes
 
-**Player Model**
+**Character**
 
-The player model gets reset to the correct one when entering for example `Center Village`.
-Kainé is locked to level 1 and cannot level up. She also can't use magic.
+The character gets reset to the correct one when entering for example `Center Village`.
+Kainé is locked to level 1 and cannot level up. She also can't use magic and can only use her own weapon.
 
 **Maps**
 
