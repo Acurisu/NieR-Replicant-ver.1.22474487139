@@ -55,6 +55,10 @@ These patches max out the mentioned properties and, if necessary, prevent them f
 
 Unlocks all items, weapons and words. Be careful when doing this as it can prevent you from doing certain quests.
 
+### Quests
+
+Unlocks and sets all quests to complete.
+
 ### Combo
 
 This patch prevents losing combo unless you reload the game by either loading a save or going to another area.

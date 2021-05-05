@@ -468,7 +468,179 @@ struct Weapons
 	Weapon_Level virtuous_dignity;
 };
 
-export enum Words_Uloth : long long
+enum Quests_5C0 : unsigned long long
+{
+	Herbal_Remedies = 0x10000000,
+	Herbal_Remedies_Completed = 0x20000000,
+	The_Gatekeepers_Errand = 0x80000000,
+	The_Gatekeepers_Errand_Completed = 0x200000000,
+	The_Lost_Eggs = 0x800000000,
+	The_Lost_Eggs_Completed = 0x8000000000,
+	Old_Fashioned_Home_Cooking = 0x20000000000,
+	Old_Fashioned_Home_Cooking_Completed = 0x80000000000,
+	Shopping_List = 0x200000000000,
+	Shopping_List_Completed = 0x800000000000,
+	Book_Smarts = 0x2000000000000,
+	Book_Smarts_Completed = 0x20000000000000,
+	The_Tavern_Keepers_Grandmother = 0x80000000000000,
+	The_Tavern_Keepers_Grandmother_Completed = 0x400000000000000,
+	A_Return_to_Shopping = 0x1000000000000000,
+	A_Return_to_Shopping_Completed = 0x4000000000000000,
+};
+
+enum Quests_5C8 : unsigned long long
+{
+	Yonahs_Cooking = 0x1,
+	Yonahs_Cooking_Completed = 0x2,
+	Boar_Hunt = 0x8,
+	Boar_Hunt_Completed = 0x40,
+	On_the_Wings_of_Eagles = 0x100,
+	On_the_Wings_of_Eagles_Completed = 0x1000,
+	Fragile_Delivery = 0x4000,
+	Fragile_Delivery_Completed = 0x40000,
+	Fragile_Delivery_2 = 0x100000,
+	Fragile_Delivery_2_Completed = 0x1000000,
+	The_Fishermans_Gambit = 0x4000000,
+	The_Fishermans_Gambit_Completed = 0x8000000,
+	The_Fishermans_Gambit_Part_2 = 0x20000000,
+	The_Fishermans_Gambit_Part_2_Completed = 0x40000000,
+	The_Fishermans_Gambit_Part_3 = 0x100000000,
+	The_Fishermans_Gambit_Part_3_Completed = 0x200000000,
+	The_Fishermans_Gambit_Part_4 = 0x800000000,
+	The_Fishermans_Gambit_Part_4_Completed = 0x1000000000,
+	The_Fishermans_Gambit_Part_5 = 0x4000000000,
+	The_Fishermans_Gambit_Part_5_Completed = 0x8000000000,
+	The_Ballad_of_the_Twins = 0x20000000000,
+	The_Ballad_of_the_Twins_Completed = 0x400000000000,
+	A_Dog_Astray = 0x1000000000000,
+	A_Dog_Astray_Completed = 0x8000000000000,
+	The_New_Merchant_in_Town = 0x20000000000000,
+	The_New_Merchant_in_Town_Completed = 0x200000000000000,
+};
+
+enum Quests_5D0 : unsigned long long
+{
+	Yonahs_Gift = 0x10,
+	Yonahs_Gift_Completed = 0x800,
+	Letter_to_a_Lover = 0x2000,
+	Letter_to_a_Lover_Completed = 0x10000,
+	A_Signature_Dish = 0x40000,
+	A_Signature_Dish_Completed = 0x100000,
+	Bon_Appetit = 0x400000,
+	Bon_Appetit_Completed = 0x4000000,
+	Fragile_Delivery_3 = 0x10000000,
+	Fragile_Delivery_3_Completed = 0x100000000,
+	The_Tangled_Message = 0x400000000,
+	The_Tangled_Message_Completed = 0x8000000000,
+	Item_Unknown = 0x100000000000,
+	Item_Unknown_Completed = 0x400000000000,
+	The_Runaway_Son = 0x1000000000000,
+	The_Runaway_Son_Completed = 0x400000000000000,
+	Apology_from_a_Fool = 0x1000000000000000,
+};
+
+enum Quests_5D8 : unsigned long long
+{
+	Apology_from_a_Fool_Completed = 0x1,
+	The_Pride_of_a_Lover = 0x40,
+	The_Pride_of_a_Lover_Completed = 0x100,
+	The_Littlest_Hero = 0x400,
+	The_Littlest_Hero_Completed = 0x2000,
+	The_Missing_Girl = 0x8000,
+	The_Missing_Girl_Completed = 0x80000,
+	A_Shade_Entombed = 0x400000,
+	A_Shade_Entombed_Completed = 0x2000000,
+	The_Masterless_Lighthouse = 0x8000000,
+	The_Masterless_Lighthouse_Completed = 0x10000000,
+	The_Scattered_Cargo = 0x40000000,
+	The_Scattered_Cargo_Completed = 0x20000000000,
+	The_Strange_Fate_of_the_Jewel = 0x100000000000,
+	The_Strange_Fate_of_the_Jewel_Completed = 0x10000000000000,
+};
+
+enum Quests_5E0 : unsigned long long
+{
+	Thieves_in_Training = 0x10,
+	Learning_a_Trade = 0x4000,
+	Learning_a_Trade_Completed = 0x400000,
+	A_Bridge_in_Peril = 0x2000000,
+	A_Bridge_in_Peril_Completed = 0x10000000,
+	Master_of_the_Southern_Plains = 0x40000000,
+	Master_of_the_Southern_Plains_Completed = 0x200000000,
+	The_Fishermans_Gambit_Part_6 = 0x800000000,
+	The_Fishermans_Gambit_Part_6_Completed = 0x1000000000,
+	The_Fishermans_Gambit_Part_7 = 0x4000000000,
+	The_Fishermans_Gambit_Part_7_Completed = 0x8000000000,
+	The_Fishermans_Gambit_Part_8 = 0x20000000000,
+	The_Fishermans_Gambit_Part_8_Completed = 0x40000000000,
+	The_Fishermans_Final_Gambit = 0x100000000000,
+	The_Fishermans_Final_Gambit_Completed = 0x200000000000,
+	Staying_Afloat = 0x800000000000,
+	Staying_Afloat_Completed = 0x2000000000000,
+	Contract_for_a_Contractor = 0x8000000000000,
+	Contract_for_a_Contractor_Completed = 0x20000000000000,
+	The_Creaky_Waterwheel = 0x80000000000000,
+	The_Creaky_Waterwheel_Completed = 0x800000000000000,
+	The_Faded_Fountain = 0x2000000000000000,
+};
+
+enum Quests_5E8 : unsigned long long
+{
+	The_Faded_Fountain_Completed = 0x2,
+	Bon_Appetit_2 = 0x8,
+	Bon_Appetit_2_Completed = 0x20,
+	Life_in_the_Sands = 0x80,
+	Life_in_the_Sands_Completed = 0x200,
+	The_Kings_Mask = 0x800,
+	The_Kings_Mask_Completed = 0x2000,
+	A_Childs_Final_Chance = 0x4000,
+	A_Childs_Final_Chance_Completed = 0x800000,
+	The_Damaged_Map = 0x2000000,
+	The_Damaged_Map_Completed = 0x4000000000,
+	Research_Project = 0x10000000000,
+	Research_Project_Completed = 0x200000000000,
+	A_Tale_of_the_Study = 0x800000000000,
+	A_Tale_of_the_Study_Completed = 0x4000000000000,
+	The_Great_Tree = 0x10000000000000,
+	The_Great_Tree_Completed = 0x80000000000000,
+	The_Despicable_Man = 0x200000000000000,
+	The_Despicable_Man_Completed = 0x8000000000000000,
+};
+
+enum Quests_5F0 : unsigned long long
+{
+	A_Memorable_Knife = 0x2,
+	A_Memorable_Knife_Completed = 0x10,
+	The_Shade_Army = 0x80,
+	The_Shade_Army_Completed = 0x2000,
+	A_City_Reborn = 0x8000,
+	A_City_Reborn_Completed = 0x10000,
+	Nightmares_and_Dust = 0x40000,
+	Nightmares_and_Dust_Completed = 0x200000,
+	Disturbing_the_Sleep_of_Kings = 0x800000,
+	Disturbing_the_Sleep_of_Kings_Completed = 0x4000000,
+	Shadows_of_the_Desert = 0x10000000,
+	Shadows_of_the_Desert_Completed = 0x100000000,
+	Search_for_the_Shade = 0x400000000,
+	Search_for_the_Shade_Completed = 0x80000000000,
+	Freesia = 0x200000000000,
+	Freesia_Completed = 0x2000000000000,
+	The_Magical_Stone = 0x10000000000000,
+	The_Magical_Stone_Completed = 0x200000000000000,
+};
+
+enum Quests_5F8 : unsigned long long
+{
+	The_Postmans_Request = 0x2000000,
+	The_Postmans_Request_Completed = 0x4000000,
+	The_Lighthouse_Ladys_Wrath = 0x20000000,
+	The_Lighthouse_Ladys_Wrath_Completed = 0x8000000000,
+	Closure = 0x20000000000,
+	Closure_Completed = 0x40000000000,
+	Thieves_in_Training_Completed = 0x200000000000000,
+};
+
+export enum Words_Uloth : unsigned long long
 {
 	Pah = 0x1,
 	Paha = 0x2,
@@ -532,7 +704,7 @@ export enum Words_Uloth : long long
 	Besuloth = 0x800000000000000,
 };
 
-export enum Words_Zarken : long long
+export enum Words_Zarken : unsigned long long
 {
 	Lug = 0x1,
 	Lugir = 0x2,
@@ -597,14 +769,19 @@ export enum Words_Zarken : long long
 	Ashurfarra = 0x1000000000000000,
 };
 
+export enum Quests_C4C : unsigned int
+{
+	The_Promised_Gift = 0x8,
+	The_Promised_Gift_Completed = 0x200,
+};
+
 export struct Player
 {
-	int unk;
-	char map[24];
-	char unk1[12];
+	int corruptness;
+	char map[32];
+	int spawn;
 	Character character;
-	char name[10];
-	char unk2[22];
+	char name[32];
 	int health;
 	int health_kaine;
 	int health_emil;
@@ -641,7 +818,18 @@ export struct Player
 	Maps maps;
 	char unk12[276];
 	Weapons weapons;
-	char unk13[601];
+	char unk13[225];
+	Quests_5C0 quests_5c0;
+	Quests_5C8 quests_5c8;
+	Quests_5D0 quests_5d0;
+	Quests_5D8 quests_5d8;
+	Quests_5E0 quests_5e0;
+	Quests_5E8 quests_5e8;
+	Quests_5F0 quests_5f0;
+	Quests_5F8 quests_5f8;
+	char unk14[312];
 	Words_Uloth words_uloth;
 	Words_Zarken words_zarken;
+	char unk15[1284];
+	Quests_C4C quests_c4c;
 };

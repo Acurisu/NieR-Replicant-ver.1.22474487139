@@ -129,15 +129,15 @@ public:
 			for (size_t i = offsetof(Player, fishing); i < offsetof(Player, unk9); ++i) {
 				p->at(i) = 99;
 			}
-
+			
 			for (size_t i = offsetof(Player, raw_materials); i < offsetof(Player, key_items); ++i) {
 				p->at(i) = 99;
 			}
-
+			
 			for (size_t i = offsetof(Player, key_items); i < offsetof(Player, unk10); ++i) {
 				p->at(i) = 1;
 			}
-
+			
 			for (size_t i = offsetof(Player, documents); i < offsetof(Player, unk11); ++i) {
 				p->at(i) = true;
 			}
@@ -150,9 +150,15 @@ public:
 				p->at(i) = Level_4;
 			}
 
+			for (size_t i = offsetof(Player, quests_5c0); i < offsetof(Player, unk14); ++i) {
+				p->at(i) = 0xFF;
+			}
+
 			player->words_uloth = static_cast<Words_Uloth>(0xFFFFFFFFFFFFFFFLL);
 			player->words_zarken = static_cast<Words_Zarken>(0x1FFFFFFFFFFFFFFFLL);
 
+			player->quests_c4c = static_cast<Quests_C4C>(The_Promised_Gift | The_Promised_Gift_Completed);
+			
 			memory.write_memory(player_address, *p);
 
 			fishing_skip_wait_time();
