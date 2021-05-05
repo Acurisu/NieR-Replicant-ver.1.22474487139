@@ -129,15 +129,15 @@ public:
 			for (size_t i = offsetof(Player, fishing); i < offsetof(Player, unk9); ++i) {
 				p->at(i) = 99;
 			}
-			
+
 			for (size_t i = offsetof(Player, raw_materials); i < offsetof(Player, key_items); ++i) {
 				p->at(i) = 99;
 			}
-			
+
 			for (size_t i = offsetof(Player, key_items); i < offsetof(Player, unk10); ++i) {
 				p->at(i) = 1;
 			}
-			
+
 			for (size_t i = offsetof(Player, documents); i < offsetof(Player, unk11); ++i) {
 				p->at(i) = true;
 			}
