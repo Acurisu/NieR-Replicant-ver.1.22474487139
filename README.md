@@ -57,7 +57,7 @@ Unlocks all items, weapons and words. Be careful when doing this as it can preve
 
 ### Quests
 
-Unlocks and sets all quests to complete.
+Unlocks and sets all quests to completed.
 
 ### Combo
 

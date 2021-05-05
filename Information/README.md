@@ -13,7 +13,7 @@ Each being `0x9260` bytes wide. The player struct can be found at an offset of `
 
 #### Corruptness
 
-There are several mechanisms in place to check whether a config is corrupt.
+There are several mechanisms in place to check whether a save file is corrupt.
 One of them checks whether this value does not equal to 200.
 
 #### Maps
@@ -67,3 +67,9 @@ I did not find any suitable name for these members so I just called them by the 
 #### Items
 
 While the item amount is enforced on update it's not checked anywhere else.
+
+#### Quests
+
+To be honest I got a bit lazy with those.
+There is one main bitfield and an extra one for `The Promised Gift`.
+For convenience I split them up into 8-byte chunks. I also only extracted which flag is set for making the quest appear and which flag is used for marking the quest as completed. In reality there are several flags used to determine the states of the quests (_Coming soon?_). Keep in mind that besides these flags they use the overall progress to determine whether a quest is actually completable. So while you can set every quest as complete you cannot manually redo all quests later on as just making them available might lead to them being shown as uncompletable.

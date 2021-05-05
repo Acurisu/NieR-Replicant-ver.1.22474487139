@@ -158,7 +158,7 @@ public:
 			player->words_zarken = static_cast<Words_Zarken>(0x1FFFFFFFFFFFFFFFLL);
 
 			player->quests_c4c = static_cast<Quests_C4C>(The_Promised_Gift | The_Promised_Gift_Completed);
-			
+
 			memory.write_memory(player_address, *p);
 
 			fishing_skip_wait_time();
