@@ -107,7 +107,7 @@ public:
 
 			std::cout << "Welcome " << player->name << std::endl;
 
-			player->character = Nier_Prologue;
+			player->character = Character::Nier_Prologue;
 
 			player->money = std::numeric_limits<int>::max();
 			player->xp = std::numeric_limits<int>::max();
@@ -147,17 +147,20 @@ public:
 			}
 
 			for (size_t i = offsetof(Player, weapons); i < offsetof(Player, unk13); ++i) {
-				p->at(i) = Level_4;
+				p->at(i) = static_cast<char>(Weapon_Level::Level_4);
 			}
 
 			for (size_t i = offsetof(Player, quests_5c0); i < offsetof(Player, unk14); ++i) {
 				p->at(i) = 0xFF;
 			}
 
-			player->words_uloth = static_cast<Words_Uloth>(0xFFFFFFFFFFFFFFFLL);
-			player->words_zarken = static_cast<Words_Zarken>(0x1FFFFFFFFFFFFFFFLL);
+			player->words_uloth = static_cast<Words_Uloth>(0xFFFFFFFFFFFFFFFull);
+			player->words_zarken = static_cast<Words_Zarken>(0x1FFFFFFFFFFFFFFFull);
 
-			player->quests_c4c = static_cast<Quests_C4C>(The_Promised_Gift | The_Promised_Gift_Completed);
+			player->tutorials_7f0 = static_cast<Tutorials_7F0>(0xFFFFFF3E35DFFFFFull);
+			player->tutorials_7f8 = static_cast<Tutorials_7F8>(0x9EFF7ull);
+
+			player->quests_c4c = static_cast<Quests_C4C>(static_cast<unsigned int>(Quests_C4C::The_Promised_Gift) | static_cast<unsigned int>(Quests_C4C::The_Promised_Gift_Completed));
 
 			memory.write_memory(player_address, *p);
 

@@ -51,13 +51,21 @@ Sets the character to prologue Nier and prevents it from being changed by the ga
 
 These patches max out the mentioned properties and, if necessary, prevent them from being changed.
 
-### Items, Weapons and Words
+### Items
 
-Unlocks all items, weapons and words. Be careful when doing this as it can prevent you from doing certain quests.
+Unlocks all items. Be careful when doing this as it can prevent you from doing certain quests.
+
+### Weapons
+
+Unlocks all weapons and sets them to their max level.
 
 ### Quests
 
 Unlocks and sets all quests to completed.
+
+### Words, Documents, Tutorials
+
+Unlocks all words, documents and tutorials.
 
 ### Combo
 
