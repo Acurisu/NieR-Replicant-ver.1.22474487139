@@ -98,6 +98,30 @@ private:
 		memory.write_memory(0x1406C1948, patch);
 	}
 
+	void magic_instant_charge()
+	{
+		/*
+		***REMOVED***
+		***REMOVED***
+		*/
+		std::array<char, 10> patch = { '\x81', '\x43', '\x38', '\x00', '\x00', '\x20', '\x41', '\x90', '\x90', '\x90' };
+		memory.write_memory(0x140565B54, patch);
+	}
+
+	void magic_rapid_fire()
+	{
+		/*
+		***REMOVED***
+		***REMOVED***
+		***REMOVED***
+		***REMOVED***
+
+		if (cooldown > 0.0)
+		*/
+		std::array<char, 2> patch = { '\x90', '\x90' };
+		memory.write_memory(0x1405663BE, patch);
+	}
+
 public:
 	Nier() : memory(L"NieR Replicant ver.1.22474487139.exe")
 	{
@@ -171,6 +195,8 @@ public:
 			health_infinite();
 			magic_infinite();
 			prevent_combo_break();
+			magic_instant_charge();
+			magic_rapid_fire();
 		}
 		else
 		{

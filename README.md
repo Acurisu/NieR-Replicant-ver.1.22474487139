@@ -51,6 +51,10 @@ Sets the character to prologue Nier and prevents it from being changed by the ga
 
 These patches max out the mentioned properties and, if necessary, prevent them from being changed.
 
+### Instant Charge and Rapid Fire
+
+Instant Charge allows you to use charged magic attacks nearly instantly. Does not yet work with certain types such as `Dark Execution`. Rapid Fire allows you to use `Dark Blast` with no cooldown between blasts.
+
 ### Items
 
 Unlocks all items. Be careful when doing this as it can prevent you from doing certain quests.
