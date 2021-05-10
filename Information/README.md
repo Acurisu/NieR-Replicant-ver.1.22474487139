@@ -16,6 +16,29 @@ Each being `0x9260` bytes wide. The player struct can be found at an offset of `
 There are several mechanisms in place to check whether a save file is corrupt.
 One of them checks whether this value does not equal to 200.
 
+The other check is a checksum located at an offset of 0x9250 from the beginning of a save file (the 200 mentioned above).
+The checksum can be calculated as follows (JS for simplicity):
+
+```js
+function checksum(buffer) {
+    const result = new Uint32Array(4).fill(0);
+    
+    for (let i = 0; i < 0xC20; i += 8) {
+        result[0] += buffer[i] + buffer[i+4];
+        result[1] += buffer[i+1] + buffer[i+5];
+        result[2] += buffer[i+2] + buffer[i+6];
+        result[3] += buffer[i+3] + buffer[i+7];
+    }
+
+    result[0] += result[2];
+    result[1] += result[3];
+
+    return result[0] + result[1];
+}
+```
+
+In this case the buffer contains only the save file for which it should calculate a checksum.
+
 #### Maps
 
 There seems to be remnants of a map called `Tokyo` in the game but teleporting to that location will only result in crashing the game.
