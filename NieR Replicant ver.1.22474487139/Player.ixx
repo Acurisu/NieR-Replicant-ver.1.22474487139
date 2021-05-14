@@ -306,7 +306,7 @@ struct Key_Items
 	char drifting_cargo;
 	char drifting_cargo_2;
 	char drifting_cargo_3;
-	char drifting_cargo_5;
+	char drifting_cargo_4;
 	char old_package;
 	char mermaid_tear;
 	char mandrake_leaf;
@@ -488,7 +488,7 @@ enum class Quests_5C0 : unsigned long long
 	A_Return_to_Shopping_Completed = 1ull << 62,
 };
 
-enum class Quests_5C8 : unsigned long long
+export enum class Quests_5C8 : unsigned long long
 {
 	Yonahs_Cooking = 1ull << 0,
 	Yonahs_Cooking_Completed = 1ull << 1,
@@ -539,7 +539,7 @@ enum class Quests_5D0 : unsigned long long
 	Apology_from_a_Fool = 1ull << 60,
 };
 
-enum class Quests_5D8 : unsigned long long
+export enum class Quests_5D8 : unsigned long long
 {
 	Apology_from_a_Fool_Completed = 1ull << 0,
 	The_Pride_of_a_Lover = 1ull << 6,

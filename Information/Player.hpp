@@ -304,7 +304,7 @@ struct Key_Items
   char drifting_cargo;
   char drifting_cargo_2;
   char drifting_cargo_3;
-  char drifting_cargo_5;
+  char drifting_cargo_4;
   char old_package;
   char mermaid_tear;
   char mandrake_leaf;
