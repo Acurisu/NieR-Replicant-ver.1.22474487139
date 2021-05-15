@@ -205,7 +205,7 @@ struct Raw_Materials
 	char bat_wing;
 	char goat_meat;
 	char goat_hide;
-	char venision;
+	char venison;
 	char rainbow_spider_silk;
 	char boar_liver;
 	char scorpion_claw;
@@ -380,7 +380,7 @@ struct Documents
 	bool underground_research_record_3;
 	bool underground_research_record_4;
 	bool letter_to_the_chief;
-	bool letter_to_two_brothers;
+	bool letter_to_two_brothers_weaponry;
 	bool letter_to_popola;
 	bool letter_to_a_faraway_lover;
 	bool letter_from_emil;
