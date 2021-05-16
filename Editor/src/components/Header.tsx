@@ -206,7 +206,7 @@ const Header: React.FC<Props> = ({ square, state, setSlot }) => {
         <Typography
           variant="h5"
           align="center"
-          color="secondary"
+          color="error"
           className={classes.subtitle}
         >
           Something went wrong when trying to load the file.
