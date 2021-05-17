@@ -70,7 +70,7 @@ const Footer: React.FC<{}> = () => {
             >
               Twitter
             </Link>
-            {" "}
+            <br />
             <Link
               target="_blank"
               rel="noopener"
