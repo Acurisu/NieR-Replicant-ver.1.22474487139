@@ -15,109 +15,54 @@ private:
 
 	void fishing_skip_wait_time()
 	{
-		/*
-		***REMOVED***
-
-		player->fishingState = 1;
-		*/
 		std::array<char, 1> patch = { '\x03' };
 		memory.write_memory(0x1403A645C, patch);
 	}
 
 	void fishing_skip_battle()
 	{
-		/*
-		***REMOVED***
-		***REMOVED***
-		***REMOVED***
-		***REMOVED***
-
-		if ( result )
-		{
-			player->fishingSuccess = 1;
-		}
-		*/
 		std::array<char, 2> patch = { '\x90', '\x90' };
 		memory.write_memory(0x1403A5731, patch);
 	}
 
 	void prevent_character_update()
 	{
-		/*
-		***REMOVED***
-
-		player->player_model = player_model;
-		*/
 		std::array<char, 6> patch = { '\x90', '\x90', '\x90', '\x90', '\x90', '\x90' };
 		memory.write_memory(0x1403B0BE0, patch);
 	}
 
 	void money_infinite()
 	{
-		/*
-		***REMOVED***
-
-		player->money = money;
-		*/
 		std::array<char, 5> patch = { '\x90', '\x90', '\x90', '\x90', '\x90' };
 		memory.write_memory(0x1403BB34F, patch);
 	}
 
 	void health_infinite()
 	{
-		/*
-		***REMOVED***
-
-		player->hp = hp;
-		*/
 		std::array<char, 5> patch = { '\x90', '\x90', '\x90', '\x90', '\x90' };
 		memory.write_memory(0x145D106DD, patch);
 	}
 
 	void magic_infinite()
 	{
-		/*
-		***REMOVED***
-
-		player->magic = magic;
-		*/
 		std::array<char, 6> patch = { '\x90', '\x90', '\x90', '\x90', '\x90', '\x90' };
 		memory.write_memory(0x1403BDB5E, patch);
 	}
 
 	void prevent_combo_break()
 	{
-		/*
-		***REMOVED***
-		[...]
-		***REMOVED***
-
-		player->combo = 0;
-		*/
 		std::array<char, 6> patch = { '\x90', '\x90', '\x90', '\x90', '\x90', '\x90' };
 		memory.write_memory(0x1406C1948, patch);
 	}
 
 	void magic_instant_charge()
 	{
-		/*
-		***REMOVED***
-		***REMOVED***
-		*/
 		std::array<char, 10> patch = { '\x81', '\x43', '\x38', '\x00', '\x00', '\x20', '\x41', '\x90', '\x90', '\x90' };
 		memory.write_memory(0x140565B54, patch);
 	}
 
 	void magic_rapid_fire()
 	{
-		/*
-		***REMOVED***
-		***REMOVED***
-		***REMOVED***
-		***REMOVED***
-
-		if (cooldown > 0.0)
-		*/
 		std::array<char, 2> patch = { '\x90', '\x90' };
 		memory.write_memory(0x1405663BE, patch);
 	}
