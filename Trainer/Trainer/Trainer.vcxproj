@@ -148,7 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Memory.ixx" />
-    <ClCompile Include="NieR Replicant ver.1.22474487139.ixx" />
+    <ClCompile Include="Trainer.ixx" />
     <ClCompile Include="Nier.ixx" />
     <ClCompile Include="Player.ixx" />
   </ItemGroup>
