@@ -27,4 +27,5 @@ Huge thanks to [ioncodes](https://github.com/ioncodes) for wasting his time on t
 > There are still a few things to take care of
 > but here's a PoC of me triggering an "arbitrary" write
 > through a malicious save game and getting RIP control!
-[Source](https://twitter.com/layle_ctf)
+
+[Source](https://twitter.com/layle_ctf/status/1388508172084776961)

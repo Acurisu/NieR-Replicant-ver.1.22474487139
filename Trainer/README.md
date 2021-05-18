@@ -1,4 +1,4 @@
-# NieR Trainer
+# Trainer
 
 ## Usage
 
