@@ -33,9 +33,13 @@ The fishing states one can have are the following:
 
 `fishing_skip_battle` immediately finishes the battle. Using only this patch would lead to a more NieR:Automata like fishing.
 
+https://user-images.githubusercontent.com/17300231/118807351-77459f00-b8a8-11eb-83a2-4aa853e57f97.mp4
+
 ### Character
 
 Sets the character to prologue Nier and prevents it from being changed by the game.
+
+![character](https://user-images.githubusercontent.com/17300231/118807411-904e5000-b8a8-11eb-83b3-643e1d1f0c5e.png)
 
 ### Money, XP, Health and Magic
 
