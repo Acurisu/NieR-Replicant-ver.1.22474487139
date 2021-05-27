@@ -16,6 +16,7 @@ import {
   oneHandedSwords,
   spears,
   twoHandedSwords,
+  levelToXP,
 } from "../../Nier";
 
 interface Props {
@@ -36,6 +37,12 @@ const General: React.FC<Props> = ({
   handleOnChangeSelect,
   slot,
 }) => {
+  const handleOnChangeLevel = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const lvl = event.target.valueAsNumber - 1;
+    slot.Level = lvl;
+    slot.XP = levelToXP[lvl];
+  };
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} sm={4}>
@@ -124,13 +131,13 @@ const General: React.FC<Props> = ({
             inputProps: {
               pattern: "[0-9]*",
               inputMode: "numeric",
-              min: -2147483648,
-              max: 2147483647,
+              min: 1,
+              max: 99,
             },
           }}
-          label="XP"
-          defaultValue={slot.XP}
-          onChange={handleOnChange(slot, "XP", true)}
+          label="Level"
+          defaultValue={slot.Level + 1}
+          onChange={handleOnChangeLevel}
         />
       </Grid>
 
