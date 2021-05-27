@@ -39,10 +39,6 @@ function checksum(buffer) {
 
 In this case the buffer contains only the save file for which it should calculate a checksum.
 
-#### Maps
-
-There seems to be remnants of a map called `Tokyo` in the game but teleporting to that location will only result in crashing the game.
-
 #### Map name & player name
 
 While for example name has an input limit of 10 chars it's not actually enforced in the code and will just read until it finds a null character. This can lead to some overflows.
@@ -66,6 +62,44 @@ They will also not instantly respawn when setting their health to a positive num
 #### Magic
 
 While Emil actually can run out of magic it doesn't seem like Kainé ever will.
+
+#### Level & XP
+
+| Level  | XP Required | Level  | XP Required | Level  | XP Required |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| 1 | 0 | 34 | 1166790 | 67 | 4971979 |
+| 2 | 30 | 35 | 1258210 | 68 | 5110609 |
+| 3 | 240 | 36 | 1350820 | 69 | 5249983 |
+| 4 | 850 | 37 | 1444655 | 70 | 5390112 |
+| 5 | 2060 | 38 | 1539750 | 71 | 5531006 |
+| 6 | 4070 | 39 | 1636140 | 72 | 5672677 |
+| 7 | 7080 | 40 | 1733860 | 73 | 5815137 |
+| 8 | 11290 | 41 | 1832945 | 74 | 5958395 |
+| 9 | 16900 | 42 | 1933430 | 75 | 6102464 |
+| 10 | 24110 | 43 | 2035350 | 76 | 6247355 |
+| 11 | 33120 | 44 | 2138740 | 77 | 6393078 |
+| 12 | 44130 | 45 | 2243635 | 78 | 6539644 |
+| 13 | 57340 | 46 | 2350070 | 79 | 6687065 |
+| 14 | 72950 | 47 | 2458080 | 80 | 6835352 |
+| 15 | 91160 | 48 | 2567700 | 81 | 6984516 |
+| 16 | 112170 | 49 | 2678965 | 82 | 7134568 |
+| 17 | 136180 | 50 | 2791910 | 83 | 7285518 |
+| 18 | 163390 | 51 | 2906570 | 84 | 7437380 |
+| 19 | 194000 | 52 | 3022980 | 85 | 7590162 |
+| 20 | 228210 | 53 | 3141175 | 86 | 7743877 |
+| 21 | 266220 | 54 | 3261190 | 87 | 7898535 |
+| 22 | 308230 | 55 | 3383060 | 88 | 8054148 |
+| 23 | 354440 | 56 | 3506820 | 89 | 8210726 |
+| 24 | 405050 | 57 | 3632505 | 90 | 8368281 |
+| 25 | 460260 | 58 | 3760150 | 91 | 8526824 |
+| 26 | 520270 | 59 | 3889790 | 92 | 8686367 |
+| 27 | 585280 | 60 | 4021460 | 93 | 8846919 |
+| 28 | 655490 | 61 | 4155195 | 94 | 9008492 |
+| 29 | 731100 | 62 | 4289596 | 95 | 9171098 |
+| 30 | 812310 | 63 | 4424674 | 96 | 9334747 |
+| 31 | 899320 | 64 | 4560440 | 97 | 9499451 |
+| 32 | 987380 | 65 | 4696906 | 98 | 9665220 |
+| 33 | 1076525 | 66 | 4834082 | 99 | 9832066 |
 
 #### Active Weapon
 

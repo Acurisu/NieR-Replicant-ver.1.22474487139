@@ -11,6 +11,7 @@ export interface Savefile {
   "Magic Kaine": number;
   "Magic Emil": number;
 
+  Level: number;
   XP: number;
 
   "Order Kaine": number;

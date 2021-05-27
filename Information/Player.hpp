@@ -866,7 +866,8 @@ struct Player
   float magic;
   float magic_kaine;
   float magic_emil;
-  char unk3[12];
+  int level;
+  char unk3[8];
   int xp;
   char unk4[12];
   Order order_kaine;
