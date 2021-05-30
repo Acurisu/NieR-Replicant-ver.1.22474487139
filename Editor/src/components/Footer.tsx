@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     footer: {
-      width: "75%",
+      width: "75vw",
       marginBottom: theme.spacing(12),
     },
 

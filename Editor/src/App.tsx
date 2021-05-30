@@ -11,6 +11,10 @@ import { cksum, Gamedata } from "./Nier";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    app: {
+      paddingLeft: "calc(100vw - 100%)",
+    },
+
     container: {
       marginBottom: theme.spacing(6),
     },
@@ -21,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
       justifyContent: "center",
       bottom: theme.spacing(2),
+      paddingRight: "calc(100vw - 100%)",
     },
 
     icon: {
@@ -59,7 +64,7 @@ const App: React.FC<{}> = () => {
   };
 
   return (
-    <React.Fragment>
+    <div className={classes.app}>
       <Container className={classes.container}>
         <Box my={4}>
           <Header
@@ -86,7 +91,7 @@ const App: React.FC<{}> = () => {
       )}
 
       <Footer />
-    </React.Fragment>
+    </div>
   );
 };
 
