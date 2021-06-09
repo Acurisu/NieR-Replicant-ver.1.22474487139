@@ -32,20 +32,59 @@ interface Props {
   slot: Savefile;
 }
 
+const getHours = (seconds: number) => {
+  return Math.floor(seconds / 3600);
+};
+
+const getMinutes = (seconds: number) => {
+  return Math.floor((seconds % 3600) / 60);
+};
+
+const getSeconds = (seconds: number) => {
+  return Math.floor((seconds % 3600) % 60);
+};
+
 const General: React.FC<Props> = ({
   handleOnChange,
   handleOnChangeSelect,
   slot,
 }) => {
   const handleOnChangeLevel = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (isNaN(event.target.valueAsNumber)) return;
+
     const lvl = event.target.valueAsNumber - 1;
     slot.Level = lvl;
     slot.XP = levelToXP[lvl];
   };
 
+  const handleOnChangeTime =
+    (kind: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (isNaN(event.target.valueAsNumber)) return;
+
+      const seconds = slot["Total Play Time"];
+      switch (kind) {
+        case "h":
+          slot["Total Play Time"] +=
+            (event.target.valueAsNumber - getHours(seconds)) * 3600;
+          break;
+        case "m":
+          slot["Total Play Time"] +=
+            (event.target.valueAsNumber - getMinutes(seconds)) * 60;
+          break;
+        case "s":
+          slot["Total Play Time"] +=
+            event.target.valueAsNumber - getSeconds(seconds);
+          break;
+      }
+    };
+
+  const h = getHours(slot["Total Play Time"]);
+  const m = getMinutes(slot["Total Play Time"]);
+  const s = getSeconds(slot["Total Play Time"]);
+
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={6} sm={3}>
         <TextField
           fullWidth
           InputProps={{ inputProps: { maxLength: 10 } }}
@@ -55,7 +94,7 @@ const General: React.FC<Props> = ({
         />
       </Grid>
 
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={6} sm={3}>
         <FormControl fullWidth variant="outlined">
           <InputLabel>Map</InputLabel>
           <Select
@@ -75,7 +114,59 @@ const General: React.FC<Props> = ({
         </FormControl>
       </Grid>
 
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={2} md={1}>
+        <TextField
+          fullWidth
+          type="number"
+          InputProps={{
+            inputProps: {
+              pattern: "[0-9]*",
+              inputMode: "numeric",
+              min: 0,
+              max: 99,
+            },
+          }}
+          defaultValue={h}
+          label="Hours"
+          onChange={handleOnChangeTime("h")}
+        />
+      </Grid>
+      <Grid item xs={2} md={1}>
+        <TextField
+          fullWidth
+          type="number"
+          InputProps={{
+            inputProps: {
+              pattern: "[0-9]*",
+              inputMode: "numeric",
+              min: 0,
+              max: 59,
+            },
+          }}
+          defaultValue={m}
+          label="Minutes"
+          onChange={handleOnChangeTime("m")}
+        />
+      </Grid>
+      <Grid item xs={2} md={1}>
+        <TextField
+          fullWidth
+          type="number"
+          InputProps={{
+            inputProps: {
+              pattern: "[0-9]*",
+              inputMode: "numeric",
+              min: 0,
+              max: 59,
+            },
+          }}
+          defaultValue={s}
+          label="Seconds"
+          onChange={handleOnChangeTime("s")}
+        />
+      </Grid>
+
+      <Grid item xs={6} sm={3}>
         <TextField
           fullWidth
           variant="filled"

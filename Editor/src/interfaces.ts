@@ -40,6 +40,8 @@ export interface Savefile {
 
   Maps: any;
 
+  "Total Play Time": number;
+
   Weapons: any;
 
   Quests: number[];

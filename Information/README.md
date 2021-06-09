@@ -125,6 +125,10 @@ I did not find any suitable name for these members so I just called them by the 
 
 While the item amount is enforced on update it's not checked anywhere else.
 
+#### Total Play Time
+
+A double who's integer digits represent the time played in seconds.
+
 #### Quests
 
 To be honest I got a bit lazy with those.
