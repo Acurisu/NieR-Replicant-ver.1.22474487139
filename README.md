@@ -8,7 +8,7 @@ I also use it to try-out/play with [C++20 Modules](https://en.cppreference.com/w
 
 This repository is split into multiple parts.
 
-- [Editor](Editor) contains the source code of ReactJS WebApp which can runs [here](https://acurisu.github.io/NieR-Replicant-ver.1.22474487139/). The corresponding Steam guide can be found [here](https://steamcommunity.com/sharedfiles/filedetails/?id=2489207847).
+- [Editor](Editor) contains the source code of the ReactJS web application which runs [here](https://acurisu.github.io/NieR-Replicant-ver.1.22474487139/). The corresponding Steam guide can be found [here](https://steamcommunity.com/sharedfiles/filedetails/?id=2489207847).
 - [Information](Information) is my note-taking place which may contain valuable information for the ones interested.
 - [Playground](Playground) is my place to have fun and try out things. You probably should ignore this place as it will be messy.
 - [Trainer](Trainer) is where I played with C++20 modules. It's an allrounder tool with endless potential ;).
