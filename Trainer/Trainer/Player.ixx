@@ -415,7 +415,7 @@ struct Maps
 	char toyko_map;
 };
 
-export enum class Weapon_Level : char
+export enum class Weapon_Level : unsigned char
 {
 	Level_1 = 0x0,
 	Level_2 = 0x1,

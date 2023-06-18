@@ -1,5 +1,3 @@
-import std.core;
-
 import Nier;
 
 int main()
