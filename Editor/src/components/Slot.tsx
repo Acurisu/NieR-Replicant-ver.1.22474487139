@@ -4,10 +4,12 @@ import {
   AccordionDetails,
   AccordionSummary,
   Chip,
+  SelectChangeEvent,
   Typography,
-} from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+} from "@mui/material";
+import { createStyles, makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { Savefile } from "../interfaces";
 import DocumentsTutorials from "./tabs/DocumentsTutorials";
@@ -73,7 +75,7 @@ const Slot: React.FC<Props> = ({ slotName, slot }) => {
 
   const handleOnChangeSelect =
     (object: any, key: string) =>
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent<any>) => {
       object[key] = event.target.value as string;
     };
 

@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { ThemeProvider, CssBaseline } from '@material-ui/core';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { createTheme  } from '@mui/material/styles';
 
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
-    type: 'dark',
+    mode: 'dark',
   },
 });
 

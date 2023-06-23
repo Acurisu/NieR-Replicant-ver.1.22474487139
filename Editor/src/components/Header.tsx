@@ -8,9 +8,10 @@ import {
   Paper,
   Select,
   Typography,
-} from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import PublishIcon from "@material-ui/icons/Publish";
+} from "@mui/material";
+import { createStyles, makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
+import PublishIcon from "@mui/icons-material/Publish";
 
 import { Savefile } from "../interfaces";
 import { Gamedata } from "../Nier";

@@ -5,7 +5,8 @@ import {
   InputLabel,
   MenuItem,
   Select,
-} from "@material-ui/core";
+  SelectChangeEvent,
+} from "@mui/material";
 
 import Bitfield from "../Bitfield";
 import { Savefile } from "../../interfaces";
@@ -15,7 +16,7 @@ interface Props {
   handleOnChangeSelect: (
     object: any,
     key: string
-  ) => (event: React.ChangeEvent<{ value: unknown }>) => void;
+  ) => (event: SelectChangeEvent<any>) => void;
   renderValue: (
     f?: (value: string | number) => string | number
   ) => (selected: unknown) => React.ReactNode;

@@ -1,6 +1,7 @@
 import React from "react";
-import { Divider, Grid, Link, Typography } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { Divider, Grid, Link, Typography } from "@mui/material";
+import { createStyles, makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -10,7 +11,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     footer: {
-      width: "75vw",
       marginBottom: theme.spacing(12),
     },
 
@@ -26,12 +26,12 @@ const Footer: React.FC<{}> = () => {
 
   return (
     <div className={classes.div}>
-      <Grid container className={classes.footer}>
-        <Grid container item xs={12} justify="center">
+      <Grid container width="75vw" className={classes.footer}>
+        <Grid container item xs={12} justifyContent="center">
           <Divider className={classes.divider} />
         </Grid>
 
-        <Grid container item xs={4} justify="center">
+        <Grid container item xs={4} justifyContent="center">
           <Link
             target="_blank"
             rel="noopener"
@@ -44,7 +44,7 @@ const Footer: React.FC<{}> = () => {
           </Link>
         </Grid>
 
-        <Grid container item xs={4} justify="center">
+        <Grid container item xs={4} justifyContent="center">
           <Typography variant="button" color="textSecondary" align="center">
             made by{" "}
             <Link
@@ -59,7 +59,7 @@ const Footer: React.FC<{}> = () => {
           </Typography>
         </Grid>
 
-        <Grid container item xs={4} justify="center">
+        <Grid container item xs={4} justifyContent="center">
           <Typography variant="button" color="textSecondary" align="center">
             <Link
               target="_blank"

@@ -6,7 +6,8 @@ import {
   MenuItem,
   Select,
   TextField,
-} from "@material-ui/core";
+  SelectChangeEvent
+} from "@mui/material";
 
 import { Savefile } from "../../interfaces";
 import {
@@ -28,7 +29,7 @@ interface Props {
   handleOnChangeSelect: (
     object: any,
     key: string
-  ) => (event: React.ChangeEvent<{ value: unknown }>) => void;
+  ) => (event: SelectChangeEvent<any>) => void;
   slot: Savefile;
 }
 

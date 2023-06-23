@@ -6,7 +6,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import Bitfield from "../Bitfield";
 import { Savefile } from "../../interfaces";

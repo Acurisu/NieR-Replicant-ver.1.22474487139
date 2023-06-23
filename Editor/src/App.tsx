@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Box, Container, Fab } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import SaveIcon from "@material-ui/icons/Save";
+import { Box, Container, Fab } from "@mui/material";
+import { createStyles, makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
+import SaveIcon from "@mui/icons-material/Save";
 
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -21,14 +22,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
     fab: {
       position: "fixed",
+      left: 0,
       display: "flex",
       width: "100%",
       justifyContent: "center",
       bottom: theme.spacing(2),
-      paddingRight: "calc(100vw - 100%)",
+      paddingLeft: "calc(100vw - 100%)",
     },
 
     icon: {
+      width: "56px",
       color: theme.palette.background.paper,
     },
   })
