@@ -1,17 +1,10 @@
 {
   "files": {
-    "main.js": "/NieR-Replicant-ver.1.22474487139/static/js/main.b877d298.chunk.js",
-    "main.js.map": "/NieR-Replicant-ver.1.22474487139/static/js/main.b877d298.chunk.js.map",
-    "runtime-main.js": "/NieR-Replicant-ver.1.22474487139/static/js/runtime-main.701c2275.js",
-    "runtime-main.js.map": "/NieR-Replicant-ver.1.22474487139/static/js/runtime-main.701c2275.js.map",
-    "static/js/2.4df124b7.chunk.js": "/NieR-Replicant-ver.1.22474487139/static/js/2.4df124b7.chunk.js",
-    "static/js/2.4df124b7.chunk.js.map": "/NieR-Replicant-ver.1.22474487139/static/js/2.4df124b7.chunk.js.map",
+    "main.js": "/NieR-Replicant-ver.1.22474487139/static/js/main.548ea102.js",
     "index.html": "/NieR-Replicant-ver.1.22474487139/index.html",
-    "static/js/2.4df124b7.chunk.js.LICENSE.txt": "/NieR-Replicant-ver.1.22474487139/static/js/2.4df124b7.chunk.js.LICENSE.txt"
+    "main.548ea102.js.map": "/NieR-Replicant-ver.1.22474487139/static/js/main.548ea102.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.701c2275.js",
-    "static/js/2.4df124b7.chunk.js",
-    "static/js/main.b877d298.chunk.js"
+    "static/js/main.548ea102.js"
   ]
 }
