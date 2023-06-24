@@ -9,7 +9,13 @@ import {
 } from "@mui/material";
 
 import { Savefile } from "../interfaces";
-import { quest, quests } from "../Nier";
+import { quests, Quest, specialQuest, SpecialQuest } from "../Nier";
+
+const getMask = (l: number, r: number) =>
+  ((1 << l) - 1) ^ (r === 31 ? 0xffffffff : ((1 << (r + 1)) >>> 0) - 1);
+const setBits = (n: number, l: number, r: number) => n | getMask(l, r);
+const unsetBits = (n: number, l: number, r: number) =>
+  n & (0xffffffff ^ getMask(l, r));
 
 interface Props {
   completed: boolean;
@@ -20,18 +26,37 @@ interface Props {
 }
 
 const Questfield: React.FC<Props> = ({ completed, renderValue, slot }) => {
-  const handleOnClick = (idx: number) => () => {
-    slot.Quests[Math.floor(idx / 32)] ^= 1 << idx % 32;
+  const handleOnClick = (value: Quest) => () => {
+    const v = completed ? value.completed : value.available;
+    slot.Quests[v.index] ^= 1 << v.offset;
+    if (completed && value.fill) {
+      const f =
+        ((slot.Quests[v.index] >>> v.offset) & 1) === 1 ? setBits : unsetBits;
+      for (
+        let i = value.available.index + (value.available.offset === 31 ? 1 : 0);
+        i <= value.completed.index;
+        ++i
+      ) {
+        slot.Quests[i] = f(
+          slot.Quests[i],
+          i === value.available.index ? value.available.offset + 1 : 0,
+          i === value.completed.index ? value.completed.offset : 31
+        );
+      }
+    }
   };
 
-  const handleOnClickSpecial = (idx: number) => () => {
-    slot.Quest ^= 1 << idx;
-  }
+  const handleOnClickSpecial = (value: SpecialQuest) => () => {
+    if (completed) {
+      const f =
+        ((slot.Quest >>> value.completed) & 1) === 1 ? unsetBits : setBits;
+      slot.Quest = f(slot.Quest, value.available, value.completed);
+    } else {
+      slot.Quest ^= 1 << value.available;
+    }
+  };
 
   const str = completed ? "Completed" : "Available";
-  const data = quests[completed ? 1 : 0];
-
-  const specialIdx = quest[completed ? 2 : 1];
 
   return (
     <Grid item xs={12}>
@@ -40,26 +65,46 @@ const Questfield: React.FC<Props> = ({ completed, renderValue, slot }) => {
         <Select
           labelId={str}
           multiple
-          defaultValue={Object.keys(data).reduce<number[]>((result, key) => {
-            const idx = Number(key);
-            if ((slot.Quests[Math.floor(idx / 32)] & (1 << idx % 32)) !== 0)
-              result.push(idx);
+          defaultValue={Object.values(quests).reduce<string[]>(
+            (result, value) => {
+              const v = completed ? value.completed : value.available;
+              if ((slot.Quests[v.index] & (1 << v.offset)) !== 0)
+                result.push(value.name);
 
-            return result;
-          }, [])}
+              return result;
+            },
+            (slot.Quest &
+              (1 <<
+                (completed
+                  ? specialQuest.completed
+                  : specialQuest.available))) !==
+              0
+              ? [specialQuest.name]
+              : []
+          )}
           input={<Input />}
-          renderValue={renderValue((key) => data[key as keyof typeof data])}
+          renderValue={renderValue((v) => v)}
         >
-          {Object.entries(data).map(([key, value]) => {
-            const idx = Number(key);
+          {Object.values(quests).map((value) => {
+            const v = completed ? value.completed : value.available;
             return (
-              <MenuItem key={idx} value={idx} onClick={handleOnClick(idx)}>
-                {value}
+              <MenuItem
+                key={`${v.index}-${v.offset}`}
+                value={value.name}
+                onClick={handleOnClick(value)}
+              >
+                {value.name}
               </MenuItem>
             );
           })}
-          <MenuItem key={specialIdx} value={specialIdx} onClick={handleOnClickSpecial(specialIdx)}>
-            {quest[0]}
+          <MenuItem
+            key={`special-${
+              completed ? specialQuest.completed : specialQuest.available
+            }`}
+            value={specialQuest.name}
+            onClick={handleOnClickSpecial(specialQuest)}
+          >
+            {specialQuest.name}
           </MenuItem>
         </Select>
       </FormControl>
