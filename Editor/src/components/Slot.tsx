@@ -63,9 +63,10 @@ const Slot: React.FC<Props> = ({ slotName, slot }) => {
 
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
-  const handleChange = (panel: string) => (_: React.ChangeEvent<{}>, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const handleChange =
+    (panel: string) => (_: React.ChangeEvent<{}>, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
 
   const handleOnChange =
     (object: any, key: string, number: boolean) =>
@@ -74,8 +75,7 @@ const Slot: React.FC<Props> = ({ slotName, slot }) => {
     };
 
   const handleOnChangeSelect =
-    (object: any, key: string) =>
-    (event: SelectChangeEvent<any>) => {
+    (object: any, key: string) => (event: SelectChangeEvent<any>) => {
       object[key] = event.target.value as string;
     };
 

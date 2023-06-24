@@ -41,8 +41,9 @@ const App: React.FC<{}> = () => {
   const classes = useStyles();
 
   const [gamedata, setGamedata] = useState<false | Gamedata | undefined>();
-  const [slot, setSlot] =
-    useState<{ name: string; slot: Savefile } | undefined>();
+  const [slot, setSlot] = useState<
+    { name: string; slot: Savefile } | undefined
+  >();
 
   const handleSave = () => {
     if (gamedata) {

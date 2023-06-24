@@ -6,7 +6,7 @@ import {
   MenuItem,
   Select,
   TextField,
-  SelectChangeEvent
+  SelectChangeEvent,
 } from "@mui/material";
 
 import { Savefile } from "../../interfaces";
