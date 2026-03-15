@@ -1,3 +1,3 @@
 :HL["/NieR-Replicant-ver.1.22474487139/_next/static/chunks/ada30c3d89aed983.css","style"]
 :HL["/NieR-Replicant-ver.1.22474487139/_next/static/chunks/341738cf6640343d.css","style"]
-0:{"buildId":"PeoSfCHz52VFMpyKZhlZc","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"r3W3q8Nk10OXsJfswUs_d","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
