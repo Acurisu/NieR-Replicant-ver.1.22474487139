@@ -12,8 +12,15 @@ export class Memory
 {
 private:
 	std::wstring process_name;
-	uintptr_t process_id;
-	uintptr_t module_base;
+	DWORD process_id = 0;
+	uintptr_t module_base = 0;
+	HANDLE handle = nullptr;
+
+	static constexpr DWORD process_access =
+		PROCESS_QUERY_INFORMATION |
+		PROCESS_VM_OPERATION |
+		PROCESS_VM_READ |
+		PROCESS_VM_WRITE;
 
 	bool get_process_id()
 	{
@@ -79,7 +86,7 @@ private:
 
 	bool open_process()
 	{
-		handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, static_cast<DWORD>(process_id));
+		handle = OpenProcess(process_access, FALSE, process_id);
 
 		if (handle)
 			return true;
@@ -88,8 +95,6 @@ private:
 	}
 
 public:
-	HANDLE handle;
-
 	Memory(std::wstring process_name) : process_name(process_name)
 	{
 		if (!get_process_id())
@@ -100,6 +105,15 @@ public:
 
 		if (!open_process())
 			std::exit(-1);
+	}
+
+	Memory(const Memory&) = delete;
+	Memory& operator=(const Memory&) = delete;
+
+	~Memory()
+	{
+		if (handle)
+			CloseHandle(handle);
 	}
 
 	std::optional<std::pair<uintptr_t, size_t>> get_module(std::wstring module_name)
@@ -136,10 +150,18 @@ public:
 	template<typename T>
 	std::optional<T> read_memory(uintptr_t address)
 	{
-		std::array<unsigned char, sizeof(T)> buffer;
-		SIZE_T bytes_read;
+		return read_memory_absolute<T>(module_base + address);
+	}
 
-		if (ReadProcessMemory(handle, reinterpret_cast<LPVOID>(module_base + address), buffer.data(), sizeof(T), &bytes_read) && bytes_read)
+	template<typename T>
+	std::optional<T> read_memory_absolute(uintptr_t address)
+	{
+		static_assert(std::is_trivially_copyable_v<T>);
+
+		std::array<unsigned char, sizeof(T)> buffer;
+		SIZE_T bytes_read = 0;
+
+		if (ReadProcessMemory(handle, reinterpret_cast<LPCVOID>(address), buffer.data(), sizeof(T), &bytes_read) && bytes_read == sizeof(T))
 			return *reinterpret_cast<T*>(buffer.data());
 
 		return std::nullopt;
@@ -148,10 +170,34 @@ public:
 	template<typename T>
 	bool write_memory(uintptr_t address, const T& buffer)
 	{
-		SIZE_T bytes_written;
-		if (WriteProcessMemory(handle, reinterpret_cast<LPVOID>(module_base + address), reinterpret_cast<LPCVOID>(&buffer), sizeof(T), &bytes_written) && bytes_written)
-			return true;
+		return write_memory_absolute(module_base + address, buffer);
+	}
 
-		return false;
+	template<typename T>
+	bool write_memory_absolute(uintptr_t address, const T& buffer)
+	{
+		static_assert(std::is_trivially_copyable_v<T>);
+		return write_memory_absolute(address, &buffer, sizeof(T));
+	}
+
+private:
+	bool write_memory_absolute(uintptr_t address, const void* buffer, size_t size)
+	{
+		auto target = reinterpret_cast<LPVOID>(address);
+		DWORD old_protect = 0;
+		SIZE_T bytes_written = 0;
+
+		if (!VirtualProtectEx(handle, target, size, PAGE_EXECUTE_READWRITE, &old_protect))
+			return false;
+
+		bool success =
+			WriteProcessMemory(handle, target, buffer, size, &bytes_written) &&
+			bytes_written == size;
+
+		FlushInstructionCache(handle, target, size);
+
+		DWORD ignored = 0;
+		VirtualProtectEx(handle, target, size, old_protect, &ignored);
+		return success;
 	}
 };

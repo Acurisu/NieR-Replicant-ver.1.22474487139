@@ -73,6 +73,10 @@ Unlocks all words, documents and tutorials.
 
 This patch prevents losing combo unless you reload the game by either loading a save or going to another area.
 
+### Cinematic Black Bars
+
+Disables the cinematic black bars.
+
 ## Video
 
 https://user-images.githubusercontent.com/17300231/116914714-5e53b180-ac4b-11eb-8900-1fc75ada9c03.mp4

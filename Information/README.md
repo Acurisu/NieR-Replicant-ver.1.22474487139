@@ -134,3 +134,58 @@ A double who's integer digits represent the time played in seconds.
 To be honest I got a bit lazy with those.
 There is one main bitfield and an extra one for `The Promised Gift`.
 For convenience I split them up into 8-byte chunks. I also only extracted which flag is set for making the quest appear and which flag is used for marking the quest as completed. In reality there are several flags used to determine the states of the quests (_Coming soon?_). Keep in mind that besides these flags they use the overall progress to determine whether a quest is actually completable. So while you can set every quest as complete you cannot manually redo all quests later on as just making them available might lead to them being shown as uncompletable.
+
+## Widget names
+
+Widget names are hashed with 32-bit FNV-1 over ASCII bytes:
+
+- start at `0x811C9DC5`
+- for each byte do `hash *= 0x01000193; hash ^= byte;`
+
+Example hashes:
+
+- `UPPER_BLACK_BELT` -> `0x1B49BD51`
+- `UNDER_BLACK_BELT` -> `0x8EDDB57B`
+- `UPPER_BLACK_BELT_TWO` -> `0x8BCD34BA`
+- `UNDER_BLACK_BELT_TWO` -> `0x91999FA8`
+
+## Cinematic black bars
+
+The cinematic bars are dedicated black-belt widgets and not anything special in the movie renderer.
+
+Relevant functions:
+
+- `SetBlackBeltPairVisible` at module offset `0x451B40`
+- `SetAllBlackBeltsVisibleMode` at module offset `0x451F00`
+- `InitSkipBlackOverlayWidgets` at module offset `0x450B50`
+- `UpdateSkipBlackPromptDuration` at module offset `0x451DD0`
+
+What they do:
+
+- the belt widgets are named `UPPER_BLACK_BELT`, `UNDER_BLACK_BELT`,
+  `UPPER_BLACK_BELT_TWO`, and `UNDER_BLACK_BELT_TWO`
+- these functions toggle bit 0 at `[widget + 0xD4]` to show or hide the belts
+- `SKIP_BLACK` is a sibling widget used for the skip prompt background
+- in the cutscene I tested, the visible pair was `UPPER_BLACK_BELT` / `UNDER_BLACK_BELT`
+- both had a visibility byte of `0x05`; changing that to `0x04` hid the bars immediately
+- the `_TWO` pair was already hidden in that scene
+
+There are also six obvious show-sites inside the togglers:
+
+- `0x451BB7`
+- `0x451C17`
+- `0x451F77`
+- `0x451FD7`
+- `0x452037`
+- `0x452097`
+
+At those sites the show path is `or al, 1` and the hide path is `and al, 0xFE`.
+
+The reliable live fix is to resolve the active black-belt widgets and clear bit 0 at `[widget + 0xD4]`, but that only hides bars that already exist. To keep them gone permanently across reloads and later scene changes, the six show-sites above need to be patched.
+
+Useful relocation anchors:
+
+- `InitSkipBlackOverlayWidgets`: `48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 48 8B EC 48 83 EC ? 48 8B 41`
+- `SetBlackBeltPairVisible`: xref `E8 ? ? ? ? 48 8D 8F ? ? ? ? E8 ? ? ? ? 84 C0 74 ? 83 BF`
+- `SetAllBlackBeltsVisibleMode`: `0C ? EB ? 24 ? 88 81 ? ? ? ? 48 8D 05 ? ? ? ? C7 44 24 ? ? ? ? ? 45 33 C9 48 89 44 24 ? 4C 8D 44 24 ? 48 8B CF 48 8D 54 24 ? E8 ? ? ? ? 66 39 68 ? 74 ? ? ? 0F B7 C8 48 03 C9 C1 E8 ? 39 44 CE ? 75 ? ? ? ? ? 48 85 C9 74 ? 0F B6 81 ? ? ? ? 84 DB 75 - 0x77`
+- the six patched show-sites are `SetBlackBeltPairVisible + 0x77`, `+0xD7`, and `SetAllBlackBeltsVisibleMode + 0x77`, `+0xD7`, `+0x137`, `+0x197`
