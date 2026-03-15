@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "predeploy": "next build",
-    "deploy": "gh-pages -d out",
+    "build": "next build && touch out/.nojekyll",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out --dotfiles",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
