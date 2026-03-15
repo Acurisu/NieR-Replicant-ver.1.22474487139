@@ -1,5 +1,3 @@
-import jBinary from "jbinary";
-
 export const cksum = (buffer: DataView, idx: number) => {
   const result = new Uint32Array(4).fill(0);
 
@@ -17,9 +15,6 @@ export const cksum = (buffer: DataView, idx: number) => {
 };
 
 export const savefile = {
-  "jBinary.all": "GAMEDATA",
-  "jBinary.littleEndian": true,
-
   GAMEDATA: {
     unk: ["skip", 0x8160],
     "Slot 1": "Savefile",
@@ -465,20 +460,261 @@ export const savefile = {
   },
 };
 
+type PrimitiveType = "uint8" | "uint32" | "int32" | "float32" | "double";
+type SkipDescriptor = ["skip", number];
+type StringDescriptor = ["string0", number];
+type ArrayDescriptor = ["array", PrimitiveType, number];
+interface SchemaObject {
+  [key: string]:
+    | PrimitiveType
+    | SkipDescriptor
+    | StringDescriptor
+    | ArrayDescriptor
+    | SchemaObject
+    | string;
+}
+type TypeDescriptor =
+  | PrimitiveType
+  | SkipDescriptor
+  | StringDescriptor
+  | ArrayDescriptor
+  | SchemaObject
+  | string;
+
+class BinaryEditor {
+  buffer: ArrayBuffer;
+  view: DataView;
+
+  private readonly decoder = new TextDecoder();
+  private readonly encoder = new TextEncoder();
+
+  constructor(buffer: ArrayBuffer) {
+    this.buffer = buffer;
+    this.view = new DataView(buffer);
+  }
+
+  readAll() {
+    const cursor = { offset: 0 };
+    return this.readDescriptor("GAMEDATA", cursor);
+  }
+
+  writeAll(data: unknown) {
+    const cursor = { offset: 0 };
+    this.writeDescriptor("GAMEDATA", cursor, data);
+  }
+
+  saveAs(fileName: string) {
+    const blob = new Blob([this.buffer], {
+      type: "application/octet-stream",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = fileName;
+    link.click();
+
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  private resolveNamedType(name: string): TypeDescriptor {
+    const descriptor = (savefile as unknown as Record<string, TypeDescriptor>)[name];
+
+    if (!descriptor) {
+      throw new Error(`Unknown schema type: ${name}`);
+    }
+
+    return descriptor;
+  }
+
+  private readDescriptor(
+    descriptor: TypeDescriptor,
+    cursor: { offset: number }
+  ): unknown {
+    if (typeof descriptor === "string") {
+      if (
+        descriptor === "uint8" ||
+        descriptor === "uint32" ||
+        descriptor === "int32" ||
+        descriptor === "float32" ||
+        descriptor === "double"
+      ) {
+        return this.readPrimitive(descriptor, cursor);
+      }
+
+      return this.readDescriptor(this.resolveNamedType(descriptor), cursor);
+    }
+
+    if (Array.isArray(descriptor)) {
+      const [kind, arg1, arg2] = descriptor;
+
+      if (kind === "skip") {
+        cursor.offset += arg1;
+        return undefined;
+      }
+
+      if (kind === "string0") {
+        const bytes = new Uint8Array(this.buffer, cursor.offset, arg1);
+        cursor.offset += arg1;
+
+        const end = bytes.indexOf(0);
+        return this.decoder.decode(end === -1 ? bytes : bytes.slice(0, end));
+      }
+
+      return Array.from({ length: arg2 }, () =>
+        this.readDescriptor(arg1, cursor)
+      );
+    }
+
+    const result: Record<string, unknown> = {};
+
+    Object.entries(descriptor).forEach(([key, value]) => {
+      if (Array.isArray(value) && value[0] === "skip") {
+        cursor.offset += value[1];
+        return;
+      }
+
+      result[key] = this.readDescriptor(value, cursor);
+    });
+
+    return result;
+  }
+
+  private writeDescriptor(
+    descriptor: TypeDescriptor,
+    cursor: { offset: number },
+    value: unknown
+  ) {
+    if (typeof descriptor === "string") {
+      if (
+        descriptor === "uint8" ||
+        descriptor === "uint32" ||
+        descriptor === "int32" ||
+        descriptor === "float32" ||
+        descriptor === "double"
+      ) {
+        this.writePrimitive(descriptor, cursor, value as number);
+        return;
+      }
+
+      this.writeDescriptor(this.resolveNamedType(descriptor), cursor, value);
+      return;
+    }
+
+    if (Array.isArray(descriptor)) {
+      const [kind, arg1, arg2] = descriptor;
+
+      if (kind === "skip") {
+        cursor.offset += arg1;
+        return;
+      }
+
+      if (kind === "string0") {
+        const bytes = new Uint8Array(this.buffer, cursor.offset, arg1);
+        bytes.fill(0);
+
+        const encoded = this.encoder.encode(String(value ?? ""));
+        bytes.set(encoded.slice(0, Math.max(0, arg1 - 1)));
+        cursor.offset += arg1;
+        return;
+      }
+
+      const items = Array.isArray(value) ? value : [];
+
+      for (let index = 0; index < arg2; index += 1) {
+        this.writeDescriptor(arg1, cursor, items[index]);
+      }
+
+      return;
+    }
+
+    const objectValue = (value ?? {}) as Record<string, unknown>;
+
+    Object.entries(descriptor).forEach(([key, entry]) => {
+      if (Array.isArray(entry) && entry[0] === "skip") {
+        cursor.offset += entry[1];
+        return;
+      }
+
+      this.writeDescriptor(entry, cursor, objectValue[key]);
+    });
+  }
+
+  private readPrimitive(
+    type: PrimitiveType,
+    cursor: { offset: number }
+  ): number {
+    const offset = cursor.offset;
+
+    switch (type) {
+      case "uint8":
+        cursor.offset += 1;
+        return this.view.getUint8(offset);
+      case "uint32":
+        cursor.offset += 4;
+        return this.view.getUint32(offset, true);
+      case "int32":
+        cursor.offset += 4;
+        return this.view.getInt32(offset, true);
+      case "float32":
+        cursor.offset += 4;
+        return this.view.getFloat32(offset, true);
+      case "double":
+        cursor.offset += 8;
+        return this.view.getFloat64(offset, true);
+    }
+  }
+
+  private writePrimitive(
+    type: PrimitiveType,
+    cursor: { offset: number },
+    value: number
+  ) {
+    const offset = cursor.offset;
+    const safeValue = Number.isFinite(value) ? value : 0;
+
+    switch (type) {
+      case "uint8":
+        this.view.setUint8(offset, safeValue);
+        cursor.offset += 1;
+        return;
+      case "uint32":
+        this.view.setUint32(offset, safeValue >>> 0, true);
+        cursor.offset += 4;
+        return;
+      case "int32":
+        this.view.setInt32(offset, safeValue | 0, true);
+        cursor.offset += 4;
+        return;
+      case "float32":
+        this.view.setFloat32(offset, safeValue, true);
+        cursor.offset += 4;
+        return;
+      case "double":
+        this.view.setFloat64(offset, safeValue, true);
+        cursor.offset += 8;
+        return;
+    }
+  }
+}
+
 export class Gamedata {
-  binary: any;
-  gamedata: any;
+  binary: BinaryEditor;
+  gamedata: Record<string, unknown>;
 
   slots = ["Slot 1", "Slot 2", "Slot 3"];
 
   constructor(buffer: ArrayBuffer) {
-    //@ts-ignore
-    this.binary = new jBinary(buffer, savefile);
-    this.gamedata = this.binary.readAll();
+    this.binary = new BinaryEditor(buffer);
+    this.gamedata = this.binary.readAll() as Record<string, unknown>;
+    const slot1 = this.gamedata["Slot 1"] as { Corruptness: number };
+    const slot2 = this.gamedata["Slot 2"] as { Corruptness: number };
+    const slot3 = this.gamedata["Slot 3"] as { Corruptness: number };
+
     if (
-      this.gamedata["Slot 1"].Corruptness !== 200 ||
-      this.gamedata["Slot 2"].Corruptness !== 200 ||
-      this.gamedata["Slot 3"].Corruptness !== 200
+      slot1.Corruptness !== 200 ||
+      slot2.Corruptness !== 200 ||
+      slot3.Corruptness !== 200
     )
       throw new Error("At least one slot did not pass the corruptness check");
   }

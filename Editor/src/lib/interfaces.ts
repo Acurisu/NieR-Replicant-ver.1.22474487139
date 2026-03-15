@@ -27,22 +27,22 @@ export interface Savefile {
   "Right Trigger": number;
 
   Money: number;
-  Recovery: any;
+  Recovery: Record<string, number>;
 
-  Cultivation: any;
+  Cultivation: Record<string, number>;
 
-  Fishing: any;
+  Fishing: Record<string, number>;
 
-  "Raw Materials": any;
-  "Key Items": any;
+  "Raw Materials": Record<string, number>;
+  "Key Items": Record<string, number>;
 
-  Documents: any;
+  Documents: Record<string, number>;
 
-  Maps: any;
+  Maps: Record<string, number>;
 
   "Total Play Time": number;
 
-  Weapons: any;
+  Weapons: Record<string, number>;
 
   Quests: number[];
 
