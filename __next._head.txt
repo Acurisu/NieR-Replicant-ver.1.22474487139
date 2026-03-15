@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[97367,["/NieR-Replicant-ver.1.22474487139/_next/static/chunks/2f236954d6a65e12.js"],"ViewportBoundary"]
+3:I[97367,["/NieR-Replicant-ver.1.22474487139/_next/static/chunks/2f236954d6a65e12.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[27201,["/NieR-Replicant-ver.1.22474487139/_next/static/chunks/2f236954d6a65e12.js"],"IconMark"]
+0:{"buildId":"PeoSfCHz52VFMpyKZhlZc","rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"NieR Replicant GAMEDATA Editor"}],["$","meta","1",{"name":"description","content":"Modernized save editor for NieR Replicant ver.1.22474487139 GAMEDATA files."}],["$","link","2",{"rel":"icon","href":"/NieR-Replicant-ver.1.22474487139/favicon.ico?favicon.e8421aeb.ico","sizes":"64x64","type":"image/x-icon"}],["$","$L5","3",{}]]}]}]}],null]}],"loading":null,"isPartial":false}
