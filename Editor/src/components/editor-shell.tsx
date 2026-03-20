@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -18,6 +18,11 @@ import {
   Text,
   TextInput,
   Title,
+  Button,
+  Modal,
+  Tabs,
+  Table,
+  Switch,
 } from "@mantine/core";
 import { IconDeviceFloppy, IconUpload } from "@tabler/icons-react";
 
@@ -38,6 +43,7 @@ import {
   words,
   type Quest,
 } from "@/lib/nier";
+import { calculateRequiredMaterials } from "@/lib/weapon-materials";
 
 type SlotName = "Slot 1" | "Slot 2" | "Slot 3";
 
@@ -264,6 +270,75 @@ const disabledFieldStyles = {
   },
 };
 
+function MaterialsModal({ opened, onClose, selectedSlot }: { opened: boolean; onClose: () => void; selectedSlot: Savefile | null }) {
+  const [includeInventory, setIncludeInventory] = useState(false);
+
+  const reqMats = useMemo(() => {
+    if (!selectedSlot) return null;
+    return calculateRequiredMaterials(
+      selectedSlot.Weapons as Record<string, number>,
+      includeInventory ? selectedSlot["Raw Materials"] as Record<string, number> : undefined
+    );
+  }, [selectedSlot, includeInventory]);
+
+  if (!selectedSlot || !reqMats) return null;
+
+  return (
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title="Materials Needed for Level 4"
+      size="lg"
+    >
+      <Stack gap="md">
+        <Switch
+          label="Calculate with the items you already have"
+          checked={includeInventory}
+          onChange={(event) => setIncludeInventory(event.currentTarget.checked)}
+        />
+        <Text size="xs" c="dimmed" mt="-sm">
+          Prioritizes categories from left to right.
+        </Text>
+
+        <Tabs defaultValue="All">
+          <Tabs.List>
+            <Tabs.Tab value="All">All</Tabs.Tab>
+            <Tabs.Tab value="Main">Main Weapons</Tabs.Tab>
+            <Tabs.Tab value="Kainé's Sword">Kainé's Sword</Tabs.Tab>
+            <Tabs.Tab value="Recycled Vessel">Recycled Vessel</Tabs.Tab>
+            <Tabs.Tab value="YoRHa">YoRHa</Tabs.Tab>
+          </Tabs.List>
+
+          {(["All", "Main", "Kainé's Sword", "Recycled Vessel", "YoRHa"] as const).map((category) => (
+            <Tabs.Panel key={category} value={category} pt="xs">
+              {reqMats[category].length === 0 ? (
+                <Text size="sm" c="dimmed" mt="sm">No materials needed for this category.</Text>
+              ) : (
+                <Table striped highlightOnHover>
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>Material</Table.Th>
+                      <Table.Th w={100} ta="right">Amount</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>
+                    {reqMats[category].map((mat) => (
+                      <Table.Tr key={mat.name}>
+                        <Table.Td>{mat.name}</Table.Td>
+                        <Table.Td ta="right">{mat.amount}</Table.Td>
+                      </Table.Tr>
+                    ))}
+                  </Table.Tbody>
+                </Table>
+              )}
+            </Tabs.Panel>
+          ))}
+        </Tabs>
+      </Stack>
+    </Modal>
+  );
+}
+
 export function EditorShell() {
   const gamedataRef = useRef<Gamedata | null>(null);
   const [hasGamedata, setHasGamedata] = useState(false);
@@ -273,6 +348,7 @@ export function EditorShell() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [formVersion, setFormVersion] = useState(0);
   const [openedSection, setOpenedSection] = useState<string | null>(null);
+  const [materialsModalOpened, setMaterialsModalOpened] = useState(false);
 
   const selectSlot = (slotName: SlotName | null) => {
     setSelectedSlotName(slotName);
@@ -848,6 +924,10 @@ export function EditorShell() {
                       });
                     }}
                   />
+
+                  <Button variant="default" onClick={() => setMaterialsModalOpened(true)}>
+                    Show Materials Needed for Level 4
+                  </Button>
                 </Stack>
               </Accordion.Panel>
             </Accordion.Item>
@@ -1013,6 +1093,12 @@ export function EditorShell() {
           </SimpleGrid>
         </Stack>
       </Stack>
+
+      <MaterialsModal
+        opened={materialsModalOpened}
+        onClose={() => setMaterialsModalOpened(false)}
+        selectedSlot={selectedSlot}
+      />
 
       {selectedSlot ? (
         <Affix position={{ bottom: 24, left: 0, right: 0 }}>
