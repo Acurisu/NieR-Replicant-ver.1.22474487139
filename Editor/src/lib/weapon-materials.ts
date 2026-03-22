@@ -1,4 +1,6 @@
-// Auto-generated from rmwc_resource JSONs
+// Auto-generated from rmwc JSONs
+
+import { savefile } from "./nier";
 
 export const weaponRequirements: Record<string, Record<number, { name: string; amount: number }[]>> = {
   "Nameless Blade": {
@@ -1382,16 +1384,16 @@ export const weaponRequirements: Record<string, Record<number, { name: string; a
 export const calculateRequiredMaterials = (
   currentWeapons: Record<string, number>,
   currentInventory?: Record<string, number>
-): Record<"All" | "Main" | "Recycled Vessel" | "YoRHa" | "Kainé's Sword", { name: string; amount: number }[]> => {
+): Record<"All" | "Main" | "Kainé's Sword" | "Recycled Vessel" | "YoRHa", { name: string; amount: number }[]> => {
   const categories = {
     Main: {} as Record<string, number>,
+    "Kainé's Sword": {} as Record<string, number>,
     "Recycled Vessel": {} as Record<string, number>,
     YoRHa: {} as Record<string, number>,
-    "Kainé's Sword": {} as Record<string, number>,
   };
 
   const getCategory = (name: string) => {
-    if (name.includes("Fool\\'s") || name.includes("Fool's")) return "Recycled Vessel";
+    if (name.includes("Fool's")) return "Recycled Vessel";
     if (name.includes("Virtuous") || name.includes("Cruel")) return "YoRHa";
     if (name.includes("Kainé") || name.includes("Kaine")) return "Kainé's Sword";
     return "Main";
@@ -1444,12 +1446,25 @@ export const calculateRequiredMaterials = (
     }
   }
 
+  const RAW_MATERIALS_ORDER = Object.keys(savefile["Raw Materials"]);
+
+  const sortMaterials = (record: Record<string, number>) => {
+    return Object.entries(record)
+      .map(([name, amount]) => ({ name, amount }))
+      .filter((m) => m.amount > 0)
+      .sort((a, b) => {
+        const idxA = RAW_MATERIALS_ORDER.indexOf(a.name);
+        const idxB = RAW_MATERIALS_ORDER.indexOf(b.name);
+        return (idxA !== -1 ? idxA : 999) - (idxB !== -1 ? idxB : 999);
+      });
+  };
+
   const result = {
-    All: Object.entries(allMap).map(([name, amount]) => ({ name, amount })).filter(m => m.amount > 0).sort((a, b) => a.name.localeCompare(b.name)),
-    Main: Object.entries(categories.Main).map(([name, amount]) => ({ name, amount })).filter(m => m.amount > 0).sort((a, b) => a.name.localeCompare(b.name)),
-    "Recycled Vessel": Object.entries(categories["Recycled Vessel"]).map(([name, amount]) => ({ name, amount })).filter(m => m.amount > 0).sort((a, b) => a.name.localeCompare(b.name)),
-    YoRHa: Object.entries(categories.YoRHa).map(([name, amount]) => ({ name, amount })).filter(m => m.amount > 0).sort((a, b) => a.name.localeCompare(b.name)),
-    "Kainé's Sword": Object.entries(categories["Kainé's Sword"]).map(([name, amount]) => ({ name, amount })).filter(m => m.amount > 0).sort((a, b) => a.name.localeCompare(b.name)),
+    All: sortMaterials(allMap),
+    Main: sortMaterials(categories.Main),
+    "Kainé's Sword": sortMaterials(categories["Kainé's Sword"]),
+    "Recycled Vessel": sortMaterials(categories["Recycled Vessel"]),
+    YoRHa: sortMaterials(categories.YoRHa),
   };
 
   return result;
