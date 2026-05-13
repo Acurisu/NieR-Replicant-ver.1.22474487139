@@ -12,20 +12,24 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mantine/core": "^8.3.17",
-    "@mantine/hooks": "^8.3.17",
-    "@tabler/icons-react": "^3.40.0",
-    "next": "16.1.6",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "@mantine/core": "^9.2.0",
+    "@mantine/hooks": "^9.2.0",
+    "@tabler/icons-react": "^3.44.0",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@eslint/compat": "^2.1.0",
+    "@types/node": "^24.12.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint": "^10.3.0",
+    "eslint-config-next": "16.2.6",
     "gh-pages": "^6.3.0",
-    "typescript": "^5"
+    "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "postcss": "8.5.10"
   }
 }
