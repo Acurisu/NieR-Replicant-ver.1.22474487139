@@ -6,6 +6,7 @@ import {
   ActionIcon,
   Affix,
   Anchor,
+  Checkbox,
   Container,
   Divider,
   Group,
@@ -15,12 +16,14 @@ import {
   Select,
   SimpleGrid,
   Stack,
+  Switch,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
 import { IconDeviceFloppy, IconUpload } from "@tabler/icons-react";
 
+import { gameFlagLabelEntries, snowFlagLabelEntries } from "@/lib/flag-labels";
 import type { Savefile } from "@/lib/interfaces";
 import {
   Gamedata,
@@ -48,10 +51,24 @@ const INVENTORY_SECTIONS = [
   "Fishing",
   "Cultivation",
 ] as const;
+const FISHING_RECORD_SECTIONS = [
+  { key: "Fishing Record Lengths", label: "Record Lengths" },
+  { key: "Fishing Record Weights", label: "Record Weights" },
+] as const;
+type FishingRecordSectionKey = (typeof FISHING_RECORD_SECTIONS)[number]["key"];
+
 const MAX_U32 = "4294967295";
 const QUEST_ENTRIES = Object.values(quests);
+const FLAG_BITS_PER_WORD = 32;
+const FLAG_POOL_BIT_COUNT = 2048;
+const GAME_FLAG_QUEST_WORD_OFFSET = 48;
+const SNOW_FLAG_QUEST_WORD_INDEX = 7;
 const LOAD_ERROR_MESSAGE =
   "Something went wrong when trying to load the file. The file might be corrupt.";
+const INT32_MIN = -2147483648;
+const INT32_MAX = 2147483647;
+const FISHING_RECORD_EMPTY = -1;
+const GRAMS_PER_KILOGRAM = 1000;
 
 const buttonAbilityOptions = abilities.map((label, index) => ({
   value: String(index),
@@ -60,12 +77,103 @@ const buttonAbilityOptions = abilities.map((label, index) => ({
 
 const mapOptions = maps.map((label) => ({ value: label, label }));
 
+const formatFlagId = (id: number) => String(id).padStart(4, "0");
+
+const gameFlagLabels = new Map<number, string>(gameFlagLabelEntries);
+QUEST_ENTRIES.forEach((quest) => {
+  gameFlagLabels.set(
+    GAME_FLAG_QUEST_WORD_OFFSET * FLAG_BITS_PER_WORD +
+      quest.available.index * FLAG_BITS_PER_WORD +
+      quest.available.offset,
+    `${quest.name} available`
+  );
+  gameFlagLabels.set(
+    GAME_FLAG_QUEST_WORD_OFFSET * FLAG_BITS_PER_WORD +
+      quest.completed.index * FLAG_BITS_PER_WORD +
+      quest.completed.offset,
+    `${quest.name} completed`
+  );
+});
+
+const snowFlagLabels = new Map<number, string>(snowFlagLabelEntries);
+snowFlagLabels.set(
+  SNOW_FLAG_QUEST_WORD_INDEX * FLAG_BITS_PER_WORD + specialQuest.available,
+  `${specialQuest.name} active`
+);
+snowFlagLabels.set(
+  SNOW_FLAG_QUEST_WORD_INDEX * FLAG_BITS_PER_WORD + specialQuest.completed,
+  `${specialQuest.name} completed`
+);
+
+const createFlagOptions = (
+  fallbackLabel: string,
+  labels: Map<number, string>
+) => {
+  const named: Array<{ value: string; label: string }> = [];
+  const unnamed: Array<{ value: string; label: string }> = [];
+
+  for (let id = 0; id < FLAG_POOL_BIT_COUNT; id += 1) {
+    const label = labels.get(id);
+    const option = {
+      value: String(id),
+      label: label
+        ? `${formatFlagId(id)} - ${label}`
+        : `${formatFlagId(id)} - Unknown ${fallbackLabel.toLowerCase()} ${id}`,
+    };
+
+    if (label) named.push(option);
+    else unnamed.push(option);
+  }
+
+  return [...named, ...unnamed];
+};
+
+const gameFlagOptions = createFlagOptions("Game Flag", gameFlagLabels);
+const snowFlagOptions = createFlagOptions("Snow Flag", snowFlagLabels);
+
 const characterOptions = [
   { value: "0", label: "Nier (Young)" },
   { value: "1", label: "Nier (Prologue)" },
   { value: "2", label: "Nier (Old)" },
   { value: "3", label: "Nier (Gestalt)" },
   { value: "4", label: "Kainé" },
+];
+
+const cultivationPlantOptions = [
+  { value: "-1", label: "Empty" },
+  { value: "0", label: "Tomato" },
+  { value: "1", label: "Eggplant" },
+  { value: "2", label: "Bell Pepper" },
+  { value: "3", label: "Beans" },
+  { value: "4", label: "Pumpkin" },
+  { value: "5", label: "Watermelon" },
+  { value: "6", label: "Melon" },
+  { value: "7", label: "Gourd" },
+  { value: "8", label: "Wheat" },
+  { value: "9", label: "Rice" },
+  { value: "10", label: "Dahlia" },
+  { value: "11", label: "Tulip" },
+  { value: "12", label: "Freesia" },
+  { value: "13", label: "Red Moonflower" },
+  { value: "14", label: "Gold Moonflower" },
+  { value: "15", label: "Peach Moonflower" },
+  { value: "16", label: "Pink Moonflower" },
+  { value: "17", label: "Blue Moonflower" },
+  { value: "18", label: "Indigo Moonflower" },
+  { value: "19", label: "White Moonflower" },
+];
+
+const cultivationFertilizerOptions = [
+  { value: "0", label: "None" },
+  { value: "1", label: "Speed Fertilizer" },
+  { value: "2", label: "Flowering Fertilizer" },
+  { value: "3", label: "Bounty Fertilizer" },
+];
+
+const orderOptions = [
+  { value: "0", label: "Attack All" },
+  { value: "1", label: "Attack Focus" },
+  { value: "2", label: "Defend Only" },
 ];
 
 const activeWeaponOptions = [
@@ -114,12 +222,38 @@ const getSeconds = (seconds: number) => Math.floor((seconds % 3600) % 60);
 const isFiniteNumber = (value: string | number): value is number =>
   typeof value === "number" && Number.isFinite(value);
 
+const isFishingWeightSection = (key: FishingRecordSectionKey) =>
+  key === "Fishing Record Weights";
+
+const getFishingRecordValue = (
+  key: FishingRecordSectionKey,
+  rawValue: number
+) => {
+  if (rawValue < 0) return undefined;
+  return isFishingWeightSection(key) ? rawValue / GRAMS_PER_KILOGRAM : rawValue;
+};
+
+const setFishingRecordValue = (
+  key: FishingRecordSectionKey,
+  editorValue: number
+) =>
+  isFishingWeightSection(key)
+    ? Math.round(editorValue * GRAMS_PER_KILOGRAM)
+    : editorValue;
+
+const getFishingRecordSuffix = (key: FishingRecordSectionKey) =>
+  isFishingWeightSection(key) ? " kg" : " cm";
+
 const getMask = (l: number, r: number) =>
   ((1 << l) - 1) ^ (r === 31 ? 0xffffffff : ((1 << (r + 1)) >>> 0) - 1);
 
 const setBits = (n: number, l: number, r: number) => n | getMask(l, r);
 const unsetBits = (n: number, l: number, r: number) =>
   n & (0xffffffff ^ getMask(l, r));
+const shouldSkipEditorKey = (key: string) =>
+  key.startsWith("unk") ||
+  key.startsWith("unused") ||
+  key.startsWith("reserved");
 
 const getFlagSelection = (
   source: Record<string, number>,
@@ -127,7 +261,8 @@ const getFlagSelection = (
 ) =>
   Object.entries(source)
     .filter(
-      ([key, value]) => value !== 0 && (!skipUnknownKeys || !key.startsWith("unk"))
+      ([key, value]) =>
+        value !== 0 && (!skipUnknownKeys || !shouldSkipEditorKey(key))
     )
     .map(([key]) => key);
 
@@ -139,7 +274,7 @@ const setFlagSelection = (
   const selectedKeys = new Set(selected);
 
   Object.keys(source).forEach((key) => {
-    if (skipUnknownKeys && key.startsWith("unk")) return;
+    if (skipUnknownKeys && shouldSkipEditorKey(key)) return;
     source[key] = selectedKeys.has(key) ? 1 : 0;
   });
 };
@@ -171,6 +306,61 @@ const setBitfieldSelection = (source: number[], selected: string[]) => {
     const bucket = Math.floor(index / 32);
     source[bucket] = (source[bucket] | (1 << (index % 32))) >>> 0;
   });
+};
+
+const getFlagWordSelection = (words: number[]) => {
+  const selected: string[] = [];
+
+  words.forEach((word, wordIndex) => {
+    for (let bit = 0; bit < FLAG_BITS_PER_WORD; bit += 1) {
+      if (((word >>> bit) & 1) !== 0) {
+        selected.push(String(wordIndex * FLAG_BITS_PER_WORD + bit));
+      }
+    }
+  });
+
+  return selected;
+};
+
+const selectionToFlagWords = (selected: string[], wordCount: number) => {
+  const words = Array<number>(wordCount).fill(0);
+
+  selected.forEach((value) => {
+    const id = Number(value);
+    if (!Number.isInteger(id) || id < 0 || id >= wordCount * FLAG_BITS_PER_WORD) {
+      return;
+    }
+
+    const wordIndex = Math.floor(id / FLAG_BITS_PER_WORD);
+    const bit = id % FLAG_BITS_PER_WORD;
+    words[wordIndex] = (words[wordIndex] | ((1 << bit) >>> 0)) >>> 0;
+  });
+
+  return words;
+};
+
+const getGameFlagWords = (slot: Savefile) => [
+  ...slot.gameFlags500To5BF,
+  ...slot.Quests,
+];
+
+const setGameFlagWords = (slot: Savefile, selected: string[]) => {
+  const words = selectionToFlagWords(selected, FLAG_POOL_BIT_COUNT / 32);
+  slot.gameFlags500To5BF = words.slice(0, GAME_FLAG_QUEST_WORD_OFFSET);
+  slot.Quests = words.slice(GAME_FLAG_QUEST_WORD_OFFSET);
+};
+
+const getSnowFlagWords = (slot: Savefile) => [
+  ...slot.snowGameFlagsC30,
+  slot.Quest,
+  ...slot.snowGameFlagsC50,
+];
+
+const setSnowFlagWords = (slot: Savefile, selected: string[]) => {
+  const words = selectionToFlagWords(selected, FLAG_POOL_BIT_COUNT / 32);
+  slot.snowGameFlagsC30 = words.slice(0, SNOW_FLAG_QUEST_WORD_INDEX);
+  slot.Quest = words[SNOW_FLAG_QUEST_WORD_INDEX];
+  slot.snowGameFlagsC50 = words.slice(SNOW_FLAG_QUEST_WORD_INDEX + 1);
 };
 
 const getQuestSelection = (slot: Savefile, completed: boolean) => {
@@ -252,6 +442,17 @@ const numberOrFallback = (value: string | null, fallback: number) => {
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 
+const setLevelAndXP = (
+  slot: Savefile,
+  levelKey: "Level" | "Level Kaine" | "Level Emil",
+  xpKey: "XP" | "XP Kaine" | "XP Emil",
+  value: number
+) => {
+  const nextLevel = Math.max(1, Math.min(99, value)) - 1;
+  slot[levelKey] = nextLevel;
+  slot[xpKey] = levelToXP[nextLevel];
+};
+
 const disabledFieldStyles = {
   label: {
     color: "var(--mantine-color-gray-5)",
@@ -273,6 +474,7 @@ export function EditorShell() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [formVersion, setFormVersion] = useState(0);
   const [openedSection, setOpenedSection] = useState<string | null>(null);
+  const [expertMode, setExpertMode] = useState(false);
 
   const selectSlot = (slotName: SlotName | null) => {
     setSelectedSlotName(slotName);
@@ -291,10 +493,14 @@ export function EditorShell() {
 
   const updateSelectedSlot = (updater: (slot: Savefile) => void) => {
     if (!selectedSlotName || !gamedataRef.current) return;
-    updater(gamedataRef.current.gamedata[selectedSlotName] as Savefile);
+    const slot = gamedataRef.current.gamedata[selectedSlotName] as Savefile;
+    updater(slot);
+    setSelectedSlot(structuredClone(slot));
   };
 
-  const formKey = `${formVersion}-${selectedSlotName ?? "empty"}`;
+  const formKey = `${formVersion}-${selectedSlotName ?? "empty"}-${
+    expertMode ? "expert" : "standard"
+  }`;
 
   const handleFileLoad = async (file: File) => {
     setLoadError(null);
@@ -471,6 +677,18 @@ export function EditorShell() {
                 }))}
               />
             ) : null}
+
+            {selectedSlot ? (
+              <Group justify="flex-end">
+                <Switch
+                  label="Expert mode"
+                  checked={expertMode}
+                  onChange={(event) => {
+                    setExpertMode(event.currentTarget.checked);
+                  }}
+                />
+              </Group>
+            ) : null}
           </Stack>
         </Paper>
 
@@ -597,9 +815,69 @@ export function EditorShell() {
                       onChange={(value) => {
                         updateSelectedSlot((slot) => {
                           if (!isFiniteNumber(value)) return;
-                          const nextLevel = Math.max(1, Math.min(99, value)) - 1;
-                          slot.Level = nextLevel;
-                          slot.XP = levelToXP[nextLevel];
+                          setLevelAndXP(slot, "Level", "XP", value);
+                        });
+                      }}
+                    />
+
+                    <NumberInput
+                      label="XP"
+                      defaultValue={selectedSlot.XP}
+                      min={INT32_MIN}
+                      max={INT32_MAX}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          if (isFiniteNumber(value)) slot.XP = value;
+                        });
+                      }}
+                    />
+
+                    <NumberInput
+                      label="Level Kaine"
+                      defaultValue={selectedSlot["Level Kaine"] + 1}
+                      min={1}
+                      max={99}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          if (!isFiniteNumber(value)) return;
+                          setLevelAndXP(slot, "Level Kaine", "XP Kaine", value);
+                        });
+                      }}
+                    />
+
+                    <NumberInput
+                      label="XP Kaine"
+                      defaultValue={selectedSlot["XP Kaine"]}
+                      min={INT32_MIN}
+                      max={INT32_MAX}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          if (isFiniteNumber(value)) slot["XP Kaine"] = value;
+                        });
+                      }}
+                    />
+
+                    <NumberInput
+                      label="Level Emil"
+                      defaultValue={selectedSlot["Level Emil"] + 1}
+                      min={1}
+                      max={99}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          if (!isFiniteNumber(value)) return;
+                          setLevelAndXP(slot, "Level Emil", "XP Emil", value);
+                        });
+                      }}
+                    />
+
+                    <NumberInput
+                      label="XP Emil"
+                      defaultValue={selectedSlot["XP Emil"]}
+                      min={INT32_MIN}
+                      max={INT32_MAX}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          if (isFiniteNumber(value)) slot["XP Emil"] = value;
                         });
                       }}
                     />
@@ -607,11 +885,23 @@ export function EditorShell() {
                     <NumberInput
                       label="Money"
                       defaultValue={selectedSlot.Money}
-                      min={-2147483648}
-                      max={2147483647}
+                      min={INT32_MIN}
+                      max={INT32_MAX}
                       onChange={(value) => {
                         updateSelectedSlot((slot) => {
                           if (isFiniteNumber(value)) slot.Money = value;
+                        });
+                      }}
+                    />
+
+                    <NumberInput
+                      label="Fishing Level"
+                      defaultValue={selectedSlot["Fishing Level"]}
+                      min={1}
+                      max={10}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          if (isFiniteNumber(value)) slot["Fishing Level"] = value;
                         });
                       }}
                     />
@@ -657,6 +947,42 @@ export function EditorShell() {
                       disabled
                       variant="filled"
                       styles={disabledFieldStyles}
+                    />
+                  </SimpleGrid>
+
+                  <Divider label="Companions" labelPosition="center" />
+
+                  <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }}>
+                    <Select
+                      label="Order Kaine"
+                      data={orderOptions}
+                      defaultValue={String(selectedSlot["Order Kaine"])}
+                      clearable={false}
+                      allowDeselect={false}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          slot["Order Kaine"] = numberOrFallback(
+                            value,
+                            slot["Order Kaine"]
+                          );
+                        });
+                      }}
+                    />
+
+                    <Select
+                      label="Order Emil"
+                      data={orderOptions}
+                      defaultValue={String(selectedSlot["Order Emil"])}
+                      clearable={false}
+                      allowDeselect={false}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          slot["Order Emil"] = numberOrFallback(
+                            value,
+                            slot["Order Emil"]
+                          );
+                        });
+                      }}
                     />
                   </SimpleGrid>
 
@@ -735,6 +1061,26 @@ export function EditorShell() {
                       }}
                     />
 
+                    <Select
+                      searchable
+                      label="Selected Young One Handed Sword"
+                      data={oneHandedWeaponOptions}
+                      defaultValue={String(
+                        Number(selectedSlot["Selected Young One Handed Sword"])
+                      )}
+                      clearable={false}
+                      allowDeselect={false}
+                      onChange={(value) => {
+                        updateSelectedSlot((slot) => {
+                          slot["Selected Young One Handed Sword"] =
+                            numberOrFallback(
+                              value,
+                              slot["Selected Young One Handed Sword"]
+                            );
+                        });
+                      }}
+                    />
+
                     {buttons.map((button) => (
                       <Select
                         key={button}
@@ -757,51 +1103,113 @@ export function EditorShell() {
                       />
                     ))}
                   </SimpleGrid>
+
+                  <Divider label="Ability Unlocks" labelPosition="center" />
+
+                  <SimpleGrid cols={{ base: 1, xs: 2, md: 3, lg: 5 }}>
+                    {Object.keys(selectedSlot["Ability Unlocks"])
+                      .filter((key) => !shouldSkipEditorKey(key))
+                      .map((ability) => (
+                        <Checkbox
+                          key={ability}
+                          label={ability}
+                          defaultChecked={
+                            selectedSlot["Ability Unlocks"][ability] !== 0
+                          }
+                          onChange={(event) => {
+                            updateSelectedSlot((slot) => {
+                              slot["Ability Unlocks"][ability] = event
+                                .currentTarget.checked
+                                ? 1
+                                : 0;
+                            });
+                          }}
+                        />
+                      ))}
+                  </SimpleGrid>
                 </Stack>
               </Accordion.Panel>
             </Accordion.Item>
 
             <Accordion.Item value="quests">
-              <Accordion.Control>Quests</Accordion.Control>
+              <Accordion.Control>
+                {expertMode ? "Game and Snow Flags" : "Quests"}
+              </Accordion.Control>
               <Accordion.Panel>
                 <Stack key={`${formKey}-quests`} gap="lg">
-                  <MultiSelect
-                    searchable
-                    clearable
-                    label="Available"
-                    data={[
-                      ...QUEST_ENTRIES.map((quest) => ({
-                        value: quest.name,
-                        label: quest.name,
-                      })),
-                      { value: specialQuest.name, label: specialQuest.name },
-                    ]}
-                    defaultValue={getQuestSelection(selectedSlot, false)}
-                    onChange={(value) => {
-                      updateSelectedSlot((slot) => {
-                        syncQuestSelection(slot, false, value);
-                      });
-                    }}
-                  />
+                  {expertMode ? (
+                    <>
+                      <MultiSelect
+                        searchable
+                        clearable
+                        label="Game Flags"
+                        data={gameFlagOptions}
+                        defaultValue={getFlagWordSelection(
+                          getGameFlagWords(selectedSlot)
+                        )}
+                        onChange={(value) => {
+                          updateSelectedSlot((slot) => {
+                            setGameFlagWords(slot, value);
+                          });
+                        }}
+                      />
 
-                  <MultiSelect
-                    searchable
-                    clearable
-                    label="Completed"
-                    data={[
-                      ...QUEST_ENTRIES.map((quest) => ({
-                        value: quest.name,
-                        label: quest.name,
-                      })),
-                      { value: specialQuest.name, label: specialQuest.name },
-                    ]}
-                    defaultValue={getQuestSelection(selectedSlot, true)}
-                    onChange={(value) => {
-                      updateSelectedSlot((slot) => {
-                        syncQuestSelection(slot, true, value);
-                      });
-                    }}
-                  />
+                      <MultiSelect
+                        searchable
+                        clearable
+                        label="Snow Flags"
+                        data={snowFlagOptions}
+                        defaultValue={getFlagWordSelection(
+                          getSnowFlagWords(selectedSlot)
+                        )}
+                        onChange={(value) => {
+                          updateSelectedSlot((slot) => {
+                            setSnowFlagWords(slot, value);
+                          });
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <MultiSelect
+                        searchable
+                        clearable
+                        label="Available"
+                        data={[
+                          ...QUEST_ENTRIES.map((quest) => ({
+                            value: quest.name,
+                            label: quest.name,
+                          })),
+                          { value: specialQuest.name, label: specialQuest.name },
+                        ]}
+                        defaultValue={getQuestSelection(selectedSlot, false)}
+                        onChange={(value) => {
+                          updateSelectedSlot((slot) => {
+                            syncQuestSelection(slot, false, value);
+                          });
+                        }}
+                      />
+
+                      <MultiSelect
+                        searchable
+                        clearable
+                        label="Completed"
+                        data={[
+                          ...QUEST_ENTRIES.map((quest) => ({
+                            value: quest.name,
+                            label: quest.name,
+                          })),
+                          { value: specialQuest.name, label: specialQuest.name },
+                        ]}
+                        defaultValue={getQuestSelection(selectedSlot, true)}
+                        onChange={(value) => {
+                          updateSelectedSlot((slot) => {
+                            syncQuestSelection(slot, true, value);
+                          });
+                        }}
+                      />
+                    </>
+                  )}
                 </Stack>
               </Accordion.Panel>
             </Accordion.Item>
@@ -875,6 +1283,27 @@ export function EditorShell() {
                   <MultiSelect
                     searchable
                     clearable
+                    label="Extra Documents"
+                    data={Object.keys(selectedSlot["Extra Documents"])
+                      .filter((key) => !shouldSkipEditorKey(key))
+                      .map((key) => ({
+                        value: key,
+                        label: key,
+                      }))}
+                    defaultValue={getFlagSelection(
+                      selectedSlot["Extra Documents"],
+                      true
+                    )}
+                    onChange={(value) => {
+                      updateSelectedSlot((slot) => {
+                        setFlagSelection(slot["Extra Documents"], value, true);
+                      });
+                    }}
+                  />
+
+                  <MultiSelect
+                    searchable
+                    clearable
                     label="Tutorials"
                     data={bitfieldOptions(tutorials)}
                     defaultValue={getBitfieldSelection(
@@ -916,7 +1345,7 @@ export function EditorShell() {
                     clearable
                     label="Maps"
                     data={Object.keys(selectedSlot.Maps)
-                      .filter((key) => !key.startsWith("unk"))
+                      .filter((key) => !shouldSkipEditorKey(key))
                       .map((key) => ({
                         value: key,
                         label: key,
@@ -936,32 +1365,145 @@ export function EditorShell() {
               <Accordion.Item key={section} value={section}>
                 <Accordion.Control>{section}</Accordion.Control>
                 <Accordion.Panel>
-                  <SimpleGrid
-                    key={`${formKey}-${section}`}
-                    cols={{ base: 1, xs: 2, md: 3, lg: 6 }}
-                  >
-                    {Object.entries(selectedSlot[section]).map(([key, value]) =>
-                      key.startsWith("unk") ? null : (
-                        <NumberInput
-                          key={key}
-                          label={key}
-                          defaultValue={value as number}
-                          min={0}
-                          max={255}
-                          onChange={(next) => {
-                            updateSelectedSlot((slot) => {
-                              if (isFiniteNumber(next)) {
-                                slot[section][key] = next;
-                              }
-                            });
-                          }}
-                        />
-                      )
-                    )}
-                  </SimpleGrid>
+                  <Stack key={`${formKey}-${section}`} gap="xl">
+                    <SimpleGrid cols={{ base: 1, xs: 2, md: 3, lg: 6 }}>
+                      {Object.entries(selectedSlot[section]).map(([key, value]) =>
+                        shouldSkipEditorKey(key) ? null : (
+                          <NumberInput
+                            key={key}
+                            label={key}
+                            defaultValue={value as number}
+                            min={0}
+                            max={255}
+                            onChange={(next) => {
+                              updateSelectedSlot((slot) => {
+                                if (isFiniteNumber(next)) {
+                                  slot[section][key] = next;
+                                }
+                              });
+                            }}
+                          />
+                        )
+                      )}
+                    </SimpleGrid>
+
+                    {section === "Fishing" ? (
+                      <Stack gap="xl">
+                        {FISHING_RECORD_SECTIONS.map(({ key, label }) => (
+                          <Stack key={key} gap="md">
+                            <Divider
+                              label={`${label} (${getFishingRecordSuffix(key).trim()})`}
+                              labelPosition="center"
+                            />
+                            <SimpleGrid cols={{ base: 1, xs: 2, md: 3, lg: 5 }}>
+                              {Object.entries(selectedSlot[key]).map(
+                                ([fish, value]) =>
+                                  shouldSkipEditorKey(fish) ? null : (
+                                    <NumberInput
+                                      key={`${key}-${fish}`}
+                                      label={fish}
+                                      defaultValue={getFishingRecordValue(
+                                        key,
+                                        value as number
+                                      )}
+                                      placeholder="No record"
+                                      min={0}
+                                      step={0.01}
+                                      decimalScale={2}
+                                      decimalSeparator="."
+                                      suffix={getFishingRecordSuffix(key)}
+                                      onChange={(next) => {
+                                        updateSelectedSlot((slot) => {
+                                          if (next === "") {
+                                            slot[key][fish] = FISHING_RECORD_EMPTY;
+                                            return;
+                                          }
+
+                                          if (isFiniteNumber(next)) {
+                                            slot[key][fish] =
+                                              setFishingRecordValue(key, next);
+                                          }
+                                        });
+                                      }}
+                                    />
+                                  )
+                              )}
+                            </SimpleGrid>
+                          </Stack>
+                        ))}
+                      </Stack>
+                    ) : null}
+
+                    {section === "Cultivation" ? (
+                      <Stack gap="md">
+                        <Divider label="Garden" labelPosition="center" />
+                        <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
+                          {selectedSlot["Cultivation Plots"].map((plot, index) => (
+                            <Stack
+                              key={`cultivation-plot-${index}`}
+                              gap="xs"
+                              p="sm"
+                              style={{
+                                border:
+                                  "1px solid var(--mantine-color-dark-4)",
+                                borderRadius: 8,
+                              }}
+                            >
+                              <Text fw={600} size="sm">
+                                Plot {index + 1}
+                              </Text>
+                              <Select
+                                searchable
+                                label="Plant"
+                                data={cultivationPlantOptions}
+                                defaultValue={String(plot.Plant)}
+                                clearable={false}
+                                allowDeselect={false}
+                                onChange={(value) => {
+                                  updateSelectedSlot((slot) => {
+                                    slot["Cultivation Plots"][index].Plant =
+                                      numberOrFallback(value, plot.Plant);
+                                  });
+                                }}
+                              />
+                              <NumberInput
+                                label="Harvest Count"
+                                defaultValue={plot["Harvest Count"]}
+                                min={0}
+                                max={255}
+                                onChange={(next) => {
+                                  updateSelectedSlot((slot) => {
+                                    if (isFiniteNumber(next)) {
+                                      slot["Cultivation Plots"][index][
+                                        "Harvest Count"
+                                      ] = next;
+                                    }
+                                  });
+                                }}
+                              />
+                              <Select
+                                label="Fertilizer"
+                                data={cultivationFertilizerOptions}
+                                defaultValue={String(plot.Fertilizer)}
+                                clearable={false}
+                                allowDeselect={false}
+                                onChange={(value) => {
+                                  updateSelectedSlot((slot) => {
+                                    slot["Cultivation Plots"][index].Fertilizer =
+                                      numberOrFallback(value, plot.Fertilizer);
+                                  });
+                                }}
+                              />
+                            </Stack>
+                          ))}
+                        </SimpleGrid>
+                      </Stack>
+                    ) : null}
+                  </Stack>
                 </Accordion.Panel>
               </Accordion.Item>
             ))}
+
           </Accordion>
         ) : null}
 

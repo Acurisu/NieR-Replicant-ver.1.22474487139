@@ -263,34 +263,39 @@ public:
 
 			// Please never do this, I'm just too lazy to actually write down all classes
 			auto p = reinterpret_cast<unsigned char*>(const_cast<Player*>(std::to_address(player)));
-			for (size_t i = offsetof(Player, recovery); i < offsetof(Player, unk7); ++i)
+			for (size_t i = offsetof(Player, recovery); i < offsetof(Player, unused_item_34_40); ++i)
 				p[i] = 10;
 
 			for (size_t i = offsetof(Player, cultivation); i < constexpr(offsetof(Player, cultivation) + offsetof(Cultivation, red_moonflower)); ++i)
 				p[i] = 99;
 
-			for (size_t i = constexpr(offsetof(Player, cultivation) + offsetof(Cultivation, red_moonflower)); i < offsetof(Player, unk8); ++i)
+			for (size_t i = constexpr(offsetof(Player, cultivation) + offsetof(Cultivation, red_moonflower)); i < offsetof(Player, unused_item_91_100); ++i)
 				p[i] = 10;
 
-			for (size_t i = offsetof(Player, fishing); i < offsetof(Player, unk9); ++i)
+			for (size_t i = offsetof(Player, fishing); i < offsetof(Player, unused_item_126_130); ++i)
 				p[i] = 99;
 
 			for (size_t i = offsetof(Player, raw_materials); i < offsetof(Player, key_items); ++i)
 				p[i] = 99;
 
-			for (size_t i = offsetof(Player, key_items); i < offsetof(Player, unk10); ++i)
+			for (size_t i = offsetof(Player, key_items); i < offsetof(Player, unused_item_336_511); ++i)
 				p[i] = 1;
 
-			for (size_t i = offsetof(Player, documents); i < offsetof(Player, unk11); ++i)
+			for (size_t i = offsetof(Player, documents); i < offsetof(Player, extra_documents); ++i)
 				p[i] = true;
+			player->extra_documents.project_gestalt_report_0923 = true;
+			player->extra_documents.project_gestalt_report_9182 = true;
+			player->extra_documents.project_gestalt_report_10432 = true;
+			player->extra_documents.project_gestalt_report_11242 = true;
+			player->unnamed_readable_562 = true;
 
-			for (size_t i = offsetof(Player, maps); i < offsetof(Player, unk12); ++i)
+			for (size_t i = offsetof(Player, maps); i < offsetof(Player, item_new_flags); ++i)
 				p[i] = 1;
 
-			for (size_t i = offsetof(Player, weapons); i < offsetof(Player, unk14); ++i)
+			for (size_t i = offsetof(Player, weapons); i < offsetof(Player, reserved_04ec); ++i)
 				p[i] = static_cast<unsigned char>(Weapon_Level::Level_4);
 
-			for (size_t i = offsetof(Player, quests_5c0); i < offsetof(Player, unk15); ++i)
+			for (size_t i = offsetof(Player, game_flags_5c0); i < offsetof(Player, game_counters); ++i)
 				p[i] = 0xFF;
 
 			player->words_uloth = static_cast<Words_Uloth>(0xFFFFFFFFFFFFFFFull);
@@ -299,9 +304,10 @@ public:
 			player->tutorials_7f0 = static_cast<Tutorials_7F0>(0xFFFFFF3E35DFFFFFull);
 			player->tutorials_7f8 = static_cast<Tutorials_7F8>(0x9EFF7ull);
 
-			player->quests_c4c = static_cast<Quests_C4C>(
-				static_cast<unsigned int>(Quests_C4C::The_Promised_Gift) |
-				static_cast<unsigned int>(Quests_C4C::The_Promised_Gift_Completed));
+			player->snow_game_flags_c48 = static_cast<SnowGameFlags_C48>(
+				static_cast<unsigned long long>(player->snow_game_flags_c48) |
+				static_cast<unsigned long long>(SnowGameFlags_C48::The_Promised_Gift) |
+				static_cast<unsigned long long>(SnowGameFlags_C48::The_Promised_Gift_Completed));
 
 			memory.write_memory(player_address, player);
 

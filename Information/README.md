@@ -129,11 +129,10 @@ While the item amount is enforced on update it's not checked anywhere else.
 
 A double who's integer digits represent the time played in seconds.
 
-#### Quests
+#### Game Flags
 
-To be honest I got a bit lazy with those.
-There is one main bitfield and an extra one for `The Promised Gift`.
-For convenience I split them up into 8-byte chunks. I also only extracted which flag is set for making the quest appear and which flag is used for marking the quest as completed. In reality there are several flags used to determine the states of the quests (_Coming soon?_). Keep in mind that besides these flags they use the overall progress to determine whether a quest is actually completable. So while you can set every quest as complete you cannot manually redo all quests later on as just making them available might lead to them being shown as uncompletable.
+
+I have extracted a large portion of the game flags and tried to give them more understandable names, falling back to internal names or generic ones when I could not determine their purpose. I plan to eventually create a dedicated document detailing all the flags and what they do. Since many of the flags interact with each other, editing them blindly is not trivial. Setting quests as completed, however, is simple enough in most cases. I am very unhappy with how they, and bitfields in general, are structured in the header file, but I am too lazy to refactor it at the moment.
 
 ## Widget names
 

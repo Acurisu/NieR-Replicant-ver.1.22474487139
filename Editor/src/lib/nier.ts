@@ -36,56 +36,120 @@ export const savefile = {
     "Magic Kaine": "float32",
     "Magic Emil": "float32",
     Level: "int32",
-    unk3: ["skip", 8],
+    "Level Kaine": "int32",
+    "Level Emil": "int32",
     XP: "int32",
-    unk4: ["skip", 12],
+    "XP Kaine": "int32",
+    "XP Emil": "int32",
+    unk4: ["skip", 4],
     "Order Kaine": "uint32",
     "Order Emil": "uint32",
     "Active Weapon": "uint32",
     "Selected One Handed Sword": "uint32",
     "Selected Two Handed Sword": "uint32",
     "Selected Spear": "uint32",
-    unk5: ["skip", 8],
+    "Selected Young One Handed Sword": "uint32",
+    "Selected Item": "int32",
     "Left Bumper": "uint32",
     "Right Bumper": "uint32",
     "Left Trigger": "uint32",
     "Right Trigger": "uint32",
-    unk6: ["skip", 12],
+    "Ability Unlocks": "Ability Unlocks",
     Money: "int32",
     Recovery: "Recovery",
-    unk7: ["skip", 7],
+    unusedItem34To40: ["skip", 7],
     Cultivation: "Cultivation",
-    unk8: ["skip", 10],
+    unusedItem91To100: ["skip", 10],
     Fishing: "Fishing",
-    unk9: ["skip", 5],
+    unusedItem126To130: ["skip", 5],
     "Raw Materials": "Raw Materials",
     "Key Items": "Key Items",
-    unk10: ["skip", 176],
+    unusedItem336To511: ["skip", 176],
     Documents: "Documents",
-    unk11: ["skip", 168],
+    unusedItem536To543: ["skip", 8],
+    "Extra Documents": "Extra Documents",
+    unusedItem548To561: ["skip", 14],
+    "Unnamed Readable 562": "uint8",
+    unusedItem563To703: ["skip", 141],
     Maps: "Maps",
-    unk12: ["skip", 264],
+    unusedItem728To767: ["skip", 40],
+    "Item Collection Flags": "Item Collection Flags",
+    "Item New Flags": "Item New Flags",
+    unusedItemFlagTail: ["skip", 32],
     "Total Play Time": "double",
-    unk13: ["skip", 4],
+    reserved04A8: ["skip", 4],
     Weapons: "Weapons",
-    unk14: ["skip", 225],
+    reserved04EC: ["skip", 4],
+    unusedWeaponFlags04F0: ["skip", 8],
+    "Weapon New Flags": ["array", "uint32", 2],
+    gameFlags500To5BF: ["array", "uint32", 48],
     Quests: ["array", "uint32", 16],
-    unk15: ["skip", 312],
+    "Game Counters": ["array", "uint8", 256],
+    "Quest Text Id": "uint32",
+    "Quest Text Item Id": "int32",
+    "Quest Text Item Count": "uint8",
+    reserved0709: ["skip", 3],
+    "Mediate Quest Id": "int32",
+    "Quest Destination X": "float32",
+    "Quest Destination Z": "float32",
+    "Quest New Flags": ["array", "uint32", 8],
     Words: ["array", "uint32", 4],
-    unk16: ["skip", 168],
-    Tutorials: ["array", "uint32", 3],
-    unk17: ["skip", 1104],
+    "Word New Flags": ["array", "uint32", 4],
+    "Equipped Word Slot 1": ["array", "uint8", 74],
+    "Equipped Word Slot 2": ["array", "uint8", 74],
+    reserved07EC: ["skip", 4],
+    Tutorials: ["array", "uint32", 4],
+    "Tutorial New Flags": ["array", "uint32", 4],
+    "Open Loading Message Flags": "uint32",
+    "Fishing Level": "int32",
+    "Fishing Record Lengths": "Fishing Record Measurements",
+    "Fishing Record Weights": "Fishing Record Measurements",
+    "Cultivation Plots": ["array", "Cultivation Plot", 15],
+    "Has White Book": "uint8",
+    reserved0B01: ["skip", 167],
+    "Castle Key Order": ["array", "uint8", 5],
+    "Castle Key New Flags": "uint8",
+    reserved0BAE: ["skip", 10],
+    "Fishing Record Update Flags": ["array", "uint8", 24],
+    reserved0BD0: ["skip", 8],
+    "Save Slot Copy Marker": "uint8",
+    reserved0BD9: ["skip", 71],
+    reserved0C20: ["skip", 4],
+    reserved0C24: ["skip", 12],
+    snowGameFlagsC30: ["array", "uint32", 7],
     Quest: "uint32",
-    unk18: ["skip", 0x8600],
+    snowGameFlagsC50: ["array", "uint32", 56],
+    snowGameCounters: ["array", "uint8", 256],
+    "Is Kaine Player": "uint32",
+    "Kaine Player Health": "int32",
+    "Kaine Player Magic": "float32",
+    "Kaine Player Level": "int32",
+    "Kaine Player XP": "int32",
+    unk18b: ["skip", 0x840c],
     Checksum: "uint32",
     unk19: ["skip", 0xc],
+  },
+
+  "Ability Unlocks": {
+    unused: ["skip", 1],
+    Defend: "uint8",
+    Evade: "uint8",
+    "Dark Blast": "uint8",
+    "Dark Phantasm": "uint8",
+    "Dark Hand": "uint8",
+    "Dark Lance": "uint8",
+    "Dark Whirlwind": "uint8",
+    "Dark Gluttony": "uint8",
+    "Dark Wall": "uint8",
+    "Dark Execution": "uint8",
+    unused1: ["skip", 1],
   },
 
   Recovery: {
     "Medicinal Herb": "uint8",
     "Health Salve": "uint8",
     "Recovery Potion": "uint8",
-    unk: ["skip", 18],
+    unusedItem3To20: ["skip", 18],
     "Strength Drop": "uint8",
     "Strength Capsule": "uint8",
     "Magic Drop": "uint8",
@@ -94,9 +158,9 @@ export const savefile = {
     "Defense Capsule": "uint8",
     "Spirit Drop": "uint8",
     "Spirit Capsule": "uint8",
-    unk1: ["skip", 2],
+    unusedItem29To30: ["skip", 2],
     "Antidotal Weed": "uint8",
-    unk2: ["skip", 1],
+    unusedItem32: ["skip", 1],
     "Smelling Salts": "uint8",
   },
 
@@ -104,7 +168,7 @@ export const savefile = {
     "Speed Fertilizer": "uint8",
     "Flowering Fertilizer": "uint8",
     "Bounty Fertilizer": "uint8",
-    unk: ["skip", 2],
+    unusedItem44To45: ["skip", 2],
     "Pumpkin Seed": "uint8",
     "Watermelon Seed": "uint8",
     "Melon Seed": "uint8",
@@ -125,7 +189,7 @@ export const savefile = {
     "Blue Moonflower Seed": "uint8",
     "Indigo Moonflower Seed": "uint8",
     "White Moonflower Seed": "uint8",
-    unk1: ["skip", 5],
+    unusedItem66To70: ["skip", 5],
     Pumpkin: "uint8",
     Watermelon: "uint8",
     Melon: "uint8",
@@ -152,7 +216,7 @@ export const savefile = {
     Lugworm: "uint8",
     Earthworm: "uint8",
     Lure: "uint8",
-    unk: ["skip", 7],
+    unusedItem104To110: ["skip", 7],
     Sardine: "uint8",
     Carp: "uint8",
     Blowfish: "uint8",
@@ -170,12 +234,47 @@ export const savefile = {
     "Shaman Fish": "uint8",
   },
 
+  "Fishing Record Measurements": {
+    "Aquatic Plant": "double",
+    Deadwood: "double",
+    "Rusty Bucket": "double",
+    "Empty Can": "double",
+    "Rusted Clump": "double",
+    Sardine: "double",
+    Blowfish: "double",
+    Bream: "double",
+    Shark: "double",
+    "Blue Marlin": "double",
+    Dunkleosteus: "double",
+    Carp: "double",
+    "Rainbow Trout": "double",
+    "Black Bass": "double",
+    "Giant Catfish": "double",
+    "Royal Fish": "double",
+    Hyneria: "double",
+    Sandfish: "double",
+    Rhizodont: "double",
+    "Shaman Fish": "double",
+    reservedRecord20To23: ["skip", 32],
+  },
+
+  "Cultivation Plot": {
+    Plant: "int8",
+    "Harvest Count": "uint8",
+    reserved02: ["skip", 2],
+    Fertilizer: "int32",
+    "Action Flags": "uint8",
+    reserved09: ["skip", 3],
+    "Rotation Degrees": "float32",
+    plantedTime: ["skip", 8],
+  },
+
   "Raw Materials": {
     "Aquatic Plant": "uint8",
     Deadwood: "uint8",
     "Rusty Bucket": "uint8",
     "Empty Can": "uint8",
-    unk: ["skip", 3],
+    unusedItem135To137: ["skip", 3],
     "Gold Ore": "uint8",
     "Silver Ore": "uint8",
     "Copper Ore": "uint8",
@@ -187,7 +286,7 @@ export const savefile = {
     Amber: "uint8",
     Fluorite: "uint8",
     Clay: "uint8",
-    unk1: ["skip", 4],
+    unusedItem149To152: ["skip", 4],
     Berries: "uint8",
     "Royal Fern": "uint8",
     "Tree Branch": "uint8",
@@ -197,7 +296,7 @@ export const savefile = {
     Lichen: "uint8",
     Mushroom: "uint8",
     Sap: "uint8",
-    unk2: ["skip", 5],
+    unusedItem162To166: ["skip", 5],
     Mutton: "uint8",
     "Boar Meat": "uint8",
     Wool: "uint8",
@@ -228,7 +327,7 @@ export const savefile = {
     "Memory Alloy": "uint8",
     "Rusted Clump": "uint8",
     "Machine Oil": "uint8",
-    unk3: ["skip", 4],
+    unusedItem197To200: ["skip", 4],
     "Forlorn Necklace": "uint8",
     "Twisted Ring": "uint8",
     "Broken Earring": "uint8",
@@ -254,7 +353,7 @@ export const savefile = {
     "Rusty Kitchen Knife": "uint8",
     "Broken Saw": "uint8",
     "Dented Metal Bat": "uint8",
-    unk4: ["skip", 1],
+    unusedItem226: ["skip", 1],
     Shell: "uint8",
     Gastropod: "uint8",
     Bivalve: "uint8",
@@ -265,7 +364,7 @@ export const savefile = {
     "Black Pearl": "uint8",
     Crab: "uint8",
     Starfish: "uint8",
-    unk5: ["skip", 5],
+    unusedItem237To241: ["skip", 5],
     "Sea Turtle Egg": "uint8",
     "Broken Pottery": "uint8",
     "Desert Rose": "uint8",
@@ -273,10 +372,10 @@ export const savefile = {
     "Damascus Steel": "uint8",
     "Eagle Egg": "uint8",
     "Chicken Egg": "uint8",
-    unk6: ["skip", 1],
+    unusedItem249: ["skip", 1],
     "Mouse Tail": "uint8",
     "Lizard Tail": "uint8",
-    unk7: ["skip", 3],
+    unusedItem252To254: ["skip", 3],
     "Deer Antler": "uint8",
   },
 
@@ -390,10 +489,17 @@ export const savefile = {
     "Letter from the Chief of The Aerie": "uint8",
   },
 
+  "Extra Documents": {
+    "Project Gestalt Report 0923": "uint8",
+    "Project Gestalt Report 9182": "uint8",
+    "Project Gestalt Report 10432": "uint8",
+    "Project Gestalt Report 11242": "uint8",
+  },
+
   Maps: {
     "World Map": "uint8",
-    unk: ["skip", 2],
-    "Central Village Map": "uint8",
+    unusedItem705To706: ["skip", 2],
+    "<NIER>'s Village Map": "uint8",
     "Lost Shrine Area Map": "uint8",
     "Lost Shrine Map": "uint8",
     "The Aerie Map": "uint8",
@@ -406,15 +512,19 @@ export const savefile = {
     "Manor Map": "uint8",
     "Forest of Myth Map": "uint8",
     "Underground Facility Map": "uint8",
-    unk1: ["skip", 1],
+    unusedItem720: ["skip", 1],
     "Shadowlord's Castle Map": "uint8",
-    unk2: ["skip", 1],
+    unusedItem722: ["skip", 1],
     "Northern Plains Map": "uint8",
     "Southern Plains Map": "uint8",
     "Eastern Road Map": "uint8",
     "Beneath the Forest of Myth Map": "uint8",
-    "Toyko Map": "uint8",
+    "Tokyo Map": "uint8",
   },
+
+  "Item Collection Flags": ["array", "uint32", 24],
+
+  "Item New Flags": ["array", "uint32", 24],
 
   Weapons: {
     "Nameless Blade": "uint8",
@@ -434,7 +544,7 @@ export const savefile = {
     "Kainé's Sword": "uint8",
     "Virtuous Contract": "uint8",
     "Cruel Oath": "uint8",
-    unk: ["skip", 3],
+    unusedWeapon17To19: ["skip", 3],
     Kusanagi: "uint8",
     "Phoenix Sword": "uint8",
     Beastlord: "uint8",
@@ -445,7 +555,7 @@ export const savefile = {
     "Vile Axe": "uint8",
     "Iron Will": "uint8",
     "Virtuous Treaty": "uint8",
-    unk1: ["skip", 10],
+    unusedWeapon30To39: ["skip", 10],
     Transience: "uint8",
     "Phoenix Spear": "uint8",
     Beastcurse: "uint8",
@@ -457,13 +567,20 @@ export const savefile = {
     "Dragoon Lance": "uint8",
     "Captain's Holy Spear": "uint8",
     "Virtuous Dignity": "uint8",
+    unusedWeapon51To63: ["skip", 13],
   },
 };
 
-type PrimitiveType = "uint8" | "uint32" | "int32" | "float32" | "double";
+type PrimitiveType =
+  | "uint8"
+  | "int8"
+  | "uint32"
+  | "int32"
+  | "float32"
+  | "double";
 type SkipDescriptor = ["skip", number];
 type StringDescriptor = ["string0", number];
-type ArrayDescriptor = ["array", PrimitiveType, number];
+type ArrayDescriptor = ["array", TypeDescriptor, number];
 interface SchemaObject {
   [key: string]:
     | PrimitiveType
@@ -534,6 +651,7 @@ class BinaryEditor {
     if (typeof descriptor === "string") {
       if (
         descriptor === "uint8" ||
+        descriptor === "int8" ||
         descriptor === "uint32" ||
         descriptor === "int32" ||
         descriptor === "float32" ||
@@ -546,23 +664,26 @@ class BinaryEditor {
     }
 
     if (Array.isArray(descriptor)) {
-      const [kind, arg1, arg2] = descriptor;
+      const kind = descriptor[0];
 
       if (kind === "skip") {
-        cursor.offset += arg1;
+        const [, size] = descriptor as SkipDescriptor;
+        cursor.offset += size;
         return undefined;
       }
 
       if (kind === "string0") {
-        const bytes = new Uint8Array(this.buffer, cursor.offset, arg1);
-        cursor.offset += arg1;
+        const [, size] = descriptor as StringDescriptor;
+        const bytes = new Uint8Array(this.buffer, cursor.offset, size);
+        cursor.offset += size;
 
         const end = bytes.indexOf(0);
         return this.decoder.decode(end === -1 ? bytes : bytes.slice(0, end));
       }
 
-      return Array.from({ length: arg2 }, () =>
-        this.readDescriptor(arg1, cursor)
+      const [, entry, count] = descriptor as ArrayDescriptor;
+      return Array.from({ length: count }, () =>
+        this.readDescriptor(entry, cursor)
       );
     }
 
@@ -588,6 +709,7 @@ class BinaryEditor {
     if (typeof descriptor === "string") {
       if (
         descriptor === "uint8" ||
+        descriptor === "int8" ||
         descriptor === "uint32" ||
         descriptor === "int32" ||
         descriptor === "float32" ||
@@ -602,27 +724,30 @@ class BinaryEditor {
     }
 
     if (Array.isArray(descriptor)) {
-      const [kind, arg1, arg2] = descriptor;
+      const kind = descriptor[0];
 
       if (kind === "skip") {
-        cursor.offset += arg1;
+        const [, size] = descriptor as SkipDescriptor;
+        cursor.offset += size;
         return;
       }
 
       if (kind === "string0") {
-        const bytes = new Uint8Array(this.buffer, cursor.offset, arg1);
+        const [, size] = descriptor as StringDescriptor;
+        const bytes = new Uint8Array(this.buffer, cursor.offset, size);
         bytes.fill(0);
 
         const encoded = this.encoder.encode(String(value ?? ""));
-        bytes.set(encoded.slice(0, Math.max(0, arg1 - 1)));
-        cursor.offset += arg1;
+        bytes.set(encoded.slice(0, Math.max(0, size - 1)));
+        cursor.offset += size;
         return;
       }
 
+      const [, entry, count] = descriptor as ArrayDescriptor;
       const items = Array.isArray(value) ? value : [];
 
-      for (let index = 0; index < arg2; index += 1) {
-        this.writeDescriptor(arg1, cursor, items[index]);
+      for (let index = 0; index < count; index += 1) {
+        this.writeDescriptor(entry, cursor, items[index]);
       }
 
       return;
@@ -650,6 +775,9 @@ class BinaryEditor {
       case "uint8":
         cursor.offset += 1;
         return this.view.getUint8(offset);
+      case "int8":
+        cursor.offset += 1;
+        return this.view.getInt8(offset);
       case "uint32":
         cursor.offset += 4;
         return this.view.getUint32(offset, true);
@@ -676,6 +804,10 @@ class BinaryEditor {
     switch (type) {
       case "uint8":
         this.view.setUint8(offset, safeValue);
+        cursor.offset += 1;
+        return;
+      case "int8":
+        this.view.setInt8(offset, safeValue);
         cursor.offset += 1;
         return;
       case "uint32":
@@ -853,11 +985,11 @@ export const oneHandedSwords: string[] = [
   "Fool's Embrace",
   "Ancient Overlord",
   "Rebirth",
-  "Earth Wyrms Claw",
+  "Earth Wyrm's Claw",
   "Nirvana Dagger",
   "Moonrise",
   "Blade of Treachery",
-  "Lily Leaf Sword",
+  "Lily-Leaf Sword",
   "Faith",
   "Iron Pipe",
   "Kainé's Sword",
@@ -1510,8 +1642,8 @@ export const quests: { [key: string]: Quest } = {
     completed: { index: 13, offset: 17 },
     fill: true,
   },
-  "The Magical": {
-    name: "The Magical",
+  "The Magical Stone": {
+    name: "The Magical Stone",
     available: { index: 13, offset: 20 },
     completed: { index: 13, offset: 25 },
     fill: true,
